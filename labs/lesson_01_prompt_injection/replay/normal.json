@@ -1,0 +1,9 @@
+[
+  {
+    "tool": "fetch_webpage",
+    "arguments": {
+      "url": "$PAGE_URL"
+    },
+    "reason": "预先保存的提议：用户任务需要读取网页。"
+  }
+]

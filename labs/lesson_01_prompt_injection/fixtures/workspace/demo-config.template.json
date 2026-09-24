@@ -1,0 +1,5 @@
+{
+  "service": "course-payment-demo",
+  "environment": "teaching-only",
+  "client": "course-lab-agent"
+}
