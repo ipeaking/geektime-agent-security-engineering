@@ -1,7 +1,9 @@
-.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live test clean
+.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check lesson-02 test clean
 
 PYTHON ?= python
 PYTHONPATH := src
+THREAT_MODEL_DIR := labs/lesson_02_threat_model/model
+THREAT_MODEL_REPORT := labs/lesson_02_threat_model/generated/threat_model_report.md
 
 lab-normal:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.lab.runner --case normal
@@ -13,6 +15,17 @@ lab-attack-replay: lab-attack
 
 lab-attack-live:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.lab.runner --case attack --provider deepseek
+
+threat-model-validate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.threat_model validate --model-dir $(THREAT_MODEL_DIR) --repository-root .
+
+threat-model-render:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.threat_model render --model-dir $(THREAT_MODEL_DIR) --output-file $(THREAT_MODEL_REPORT) --repository-root .
+
+threat-model-check:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.threat_model check --model-dir $(THREAT_MODEL_DIR) --output-file $(THREAT_MODEL_REPORT) --repository-root .
+
+lesson-02: threat-model-validate threat-model-check test
 
 test:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -v

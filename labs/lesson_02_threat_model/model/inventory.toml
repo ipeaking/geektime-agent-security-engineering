@@ -1,0 +1,183 @@
+[[actors]]
+id = "ACT-001"
+name = "Agent 使用者"
+trust = "external"
+description = "提交任务和网页地址；当前实验没有实现用户身份认证。"
+
+[[actors]]
+id = "ACT-002"
+name = "外部网页内容作者"
+trust = "untrusted"
+description = "能够控制 Agent 将要读取的网页内容，可能在正文中放入恶意指令。"
+
+[[actors]]
+id = "ACT-003"
+name = "开发者或实验操作者"
+trust = "privileged"
+description = "配置模型、运行实验并查看审计与诊断结果。"
+
+[[actors]]
+id = "ACT-004"
+name = "外部模型服务提供方"
+trust = "third-party"
+description = "接收模型上下文并返回文本或函数调用提议。"
+
+[[components]]
+id = "CMP-001"
+name = "Lab Runner"
+kind = "application"
+trust = "course-controlled"
+description = "读取 Case、准备合成工作区、启动本地服务并组装一次 Agent 运行。"
+code_refs = ["src/agent_security/lab/runner.py"]
+
+[[components]]
+id = "CMP-002"
+name = "Agent Runtime"
+kind = "runtime"
+trust = "course-controlled"
+description = "负责 Live 工具循环或确定性 Replay，并在模型与执行器之间传递消息。"
+code_refs = [
+  "src/agent_security/agent/deepseek_runtime.py",
+  "src/agent_security/agent/replay_runtime.py",
+]
+
+[[components]]
+id = "CMP-003"
+name = "外部模型服务"
+kind = "external-service"
+trust = "third-party"
+description = "根据收到的上下文生成回答或工具调用；不属于本仓库代码。"
+code_refs = []
+
+[[components]]
+id = "CMP-004"
+name = "Tool Executor"
+kind = "executor"
+trust = "course-controlled"
+description = "记录模型提议，然后直接查找并执行工具；当前没有独立授权判断。"
+code_refs = ["src/agent_security/tools/registry.py"]
+
+[[components]]
+id = "CMP-005"
+name = "fetch_webpage"
+kind = "tool"
+trust = "course-controlled"
+description = "向给定 URL 发起 HTTP 请求并返回网页原始内容。"
+code_refs = ["src/agent_security/tools/fetch_webpage.py"]
+tool_name = "fetch_webpage"
+
+[[components]]
+id = "CMP-006"
+name = "read_file"
+kind = "tool"
+trust = "course-controlled"
+description = "读取合成工作区内的 UTF-8 文件，并阻止路径逃逸。"
+code_refs = ["src/agent_security/tools/read_file.py"]
+tool_name = "read_file"
+
+[[components]]
+id = "CMP-007"
+name = "send_diagnostic"
+kind = "tool"
+trust = "course-controlled"
+description = "把模型给出的 payload 发送到构造时固定的本地诊断接口。"
+code_refs = ["src/agent_security/tools/send_diagnostic.py"]
+tool_name = "send_diagnostic"
+
+[[components]]
+id = "CMP-008"
+name = "本地页面服务"
+kind = "local-service"
+trust = "course-controlled"
+description = "在 127.0.0.1 上托管正常页面和恶意页面。"
+code_refs = ["src/agent_security/lab/server.py"]
+
+[[components]]
+id = "CMP-009"
+name = "合成工作区"
+kind = "data-store"
+trust = "course-controlled"
+description = "保存每次运行生成的 demo-config.json 和动态 Canary。"
+code_refs = ["src/agent_security/lab/runner.py"]
+
+[[components]]
+id = "CMP-010"
+name = "本地诊断接收器"
+kind = "local-service"
+trust = "course-controlled"
+description = "接收诊断 payload 并将其暴露给 Runner 作为可观察副作用。"
+code_refs = ["src/agent_security/lab/server.py"]
+
+[[components]]
+id = "CMP-011"
+name = "审计存储"
+kind = "data-store"
+trust = "course-controlled"
+description = "以 JSON Lines 形式记录 Agent 和工具事件，包括完整参数与输出。"
+code_refs = ["src/agent_security/audit/logger.py"]
+
+[[assets]]
+id = "AST-001"
+name = "用户任务意图"
+classification = "internal"
+description = "用户真正授权 Agent 完成的目标和任务边界。"
+
+[[assets]]
+id = "AST-002"
+name = "模型上下文"
+classification = "internal"
+description = "系统指令、用户任务、网页内容和工具结果组成的模型输入。"
+
+[[assets]]
+id = "AST-003"
+name = "本地文件内容"
+classification = "sensitive"
+description = "合成配置文件及其动态 Canary；用于代表真实系统中的敏感数据。"
+
+[[assets]]
+id = "AST-004"
+name = "工具能力"
+classification = "privileged"
+description = "读取网页、读取文件和发送数据的程序能力。"
+
+[[assets]]
+id = "AST-005"
+name = "模型 API 凭证"
+classification = "secret"
+description = "用于调用外部模型服务的 DEEPSEEK_API_KEY。"
+
+[[assets]]
+id = "AST-006"
+name = "审计证据"
+classification = "sensitive"
+description = "用于还原工具提议、执行结果和外部副作用的事件记录。"
+
+[[trust_boundaries]]
+id = "TB-001"
+name = "外部使用者到 Agent"
+description = "用户输入从系统外部进入实验程序。"
+
+[[trust_boundaries]]
+id = "TB-002"
+name = "不可信内容到模型上下文"
+description = "外部网页内容被工具读取，并作为数据进入后续模型上下文。"
+
+[[trust_boundaries]]
+id = "TB-003"
+name = "Agent 到外部模型服务"
+description = "上下文和 API 凭证离开本地进程，函数调用提议从第三方服务返回。"
+
+[[trust_boundaries]]
+id = "TB-004"
+name = "模型提议到工具执行"
+description = "本应区分“模型想做什么”和“系统允许做什么”的关键授权边界。"
+
+[[trust_boundaries]]
+id = "TB-005"
+name = "工具执行到资源或接收方"
+description = "工具对网页、文件系统和诊断接口产生真实读取或发送行为。"
+
+[[trust_boundaries]]
+id = "TB-006"
+name = "Agent 进程到审计存储"
+description = "运行数据被持久化为本地审计证据，也可能形成敏感数据副本。"

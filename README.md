@@ -1,6 +1,15 @@
 # Agent Security Engineering
 
-这是课程第 01 讲的可运行实验，用 Live 与 Replay 两条路径研究间接提示词注入及其工程后果。
+这是《AI 安全工程化实战》课程的配套项目。代码会随课程逐讲演进，每一讲的稳定版本都会用 Git Tag 保留。
+
+## 课程代码地图
+
+- 第 01 讲 `lesson-01-prompt-injection`：用 Live 与 Replay 研究间接提示词注入及其工程后果。
+- 第 02 讲（当前开发版本）：为第一讲的 Agent 建立可校验、可生成报告的威胁模型。
+
+切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
+
+## 第 01 讲：Prompt Injection
 
 - **Live 模式**把只含自然语言恶意指令的网页交给真实模型，观察模型是否会自主提出越权工具调用。结果具有不确定性，不作为稳定回归测试。
 - **Replay 模式**读取独立的工具调用轨迹，假设模型已经提出错误动作，稳定验证缺少任务级授权的执行器会产生什么受控副作用。
@@ -200,3 +209,16 @@ tests/security/test_lesson_01_prompt_injection.py
 ```
 
 当前版本已有实验环境隔离，但故意缺少任务级授权、资源 Scope、Policy Engine、审批和数据流检查。后续课程会在同一项目上逐步增加这些能力。
+
+## 第 02 讲：威胁模型
+
+第二讲不增加防御功能，而是把第一讲系统的参与者、资产、组件、信任边界、数据流和威胁保存为结构化 TOML，并自动生成一份 Markdown 报告。
+
+```bash
+make threat-model-validate
+make threat-model-render
+make threat-model-check
+make lesson-02
+```
+
+详细说明见 `labs/lesson_02_threat_model/README.md`，生成的完整报告位于 `labs/lesson_02_threat_model/generated/threat_model_report.md`。

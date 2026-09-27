@@ -1,0 +1,266 @@
+[[threats]]
+id = "THR-001"
+title = "间接提示词注入驱动越权工具调用"
+description = "网页作者把操作指令混入正文，模型可能把外部数据误当成已授权步骤，进而读取文件并发送内容。"
+sources = ["ACT-002"]
+entry_flows = ["DF-007"]
+affected_assets = ["AST-001", "AST-002", "AST-003", "AST-004"]
+affected_components = ["CMP-002", "CMP-003", "CMP-004", "CMP-006", "CMP-007", "CMP-009", "CMP-010"]
+trust_boundaries = ["TB-002", "TB-003", "TB-004", "TB-005"]
+attack_flows = [
+  "DF-006",
+  "DF-007",
+  "DF-012",
+  "DF-013",
+  "DF-004",
+  "DF-005",
+  "DF-008",
+  "DF-009",
+  "DF-012",
+  "DF-013",
+  "DF-004",
+  "DF-005",
+  "DF-010",
+  "DF-011",
+]
+preconditions = [
+  "Agent 会读取攻击者能够影响的外部内容。",
+  "模型可以提出 read_file 和 send_diagnostic 调用。",
+  "执行器把模型提议直接当成可执行动作。",
+]
+current_controls = [
+  "文件读取限制在合成工作区。",
+  "诊断目标固定为本地回环地址。",
+  "审计日志和动态 Canary 可以证明副作用。",
+]
+control_gaps = [
+  "没有任务级工具授权。",
+  "没有资源 Scope 和数据流策略。",
+  "高风险发送不需要人工确认。",
+]
+priority = "P1"
+impact_confidentiality = "medium"
+impact_integrity = "medium"
+impact_availability = "low"
+impact_rationale = "实验只泄露合成配置到本地，但相同工具组合放入真实系统后可能暴露凭证、文档或客户数据。"
+likelihood = "medium"
+likelihood_rationale = "Live 证明特定模型和配置下可能发生，Replay 证明错误调用能够稳定穿过执行层；这不是固定攻击成功率。"
+
+[[threats]]
+id = "THR-002"
+title = "敏感工具结果被发送给外部模型服务"
+description = "read_file 的完整输出会被 Runtime 包装成 function_call_output，再发送给第三方模型服务。"
+sources = ["CMP-002"]
+entry_flows = ["DF-012"]
+affected_assets = ["AST-002", "AST-003"]
+affected_components = ["CMP-002", "CMP-003", "CMP-004", "CMP-006"]
+trust_boundaries = ["TB-003", "TB-004", "TB-005"]
+attack_flows = ["DF-008", "DF-009", "DF-012", "DF-013"]
+preconditions = [
+  "模型提出文件读取调用。",
+  "文件读取成功并返回内容。",
+  "Runtime 继续下一轮真实模型请求。",
+]
+current_controls = [
+  "课程文件只包含合成数据。",
+  "Replay 模式不调用外部模型服务。",
+]
+control_gaps = [
+  "发送模型请求前没有敏感数据识别和脱敏。",
+  "工具输出没有按来源和数据等级标记。",
+]
+priority = "P1"
+impact_confidentiality = "high"
+impact_integrity = "low"
+impact_availability = "low"
+impact_rationale = "在真实系统中，工具结果可能包含凭证、内部文档或个人信息，并离开本地信任域。"
+likelihood = "medium"
+likelihood_rationale = "只要 Live 模式读取文件，当前代码路径就会把完整结果发送给外部模型。"
+
+[[threats]]
+id = "THR-003"
+title = "网页工具访问未批准地址"
+description = "fetch_webpage 接受模型提供的 URL，当前没有域名允许列表、协议策略或网络出口策略。"
+sources = ["ACT-001", "CMP-003"]
+entry_flows = ["DF-004", "DF-005"]
+affected_assets = ["AST-002", "AST-004"]
+affected_components = ["CMP-002", "CMP-004", "CMP-005"]
+trust_boundaries = ["TB-004", "TB-005"]
+attack_flows = ["DF-004", "DF-005", "DF-006", "DF-007"]
+preconditions = [
+  "攻击者或模型能够影响传给 fetch_webpage 的 URL。",
+  "运行环境可以访问目标网络地址。",
+]
+current_controls = [
+  "工具设置了请求超时和最大响应大小。",
+  "课程 Runner 默认只提供 127.0.0.1 页面地址。",
+]
+control_gaps = [
+  "没有 URL、协议和域名允许列表。",
+  "没有独立网络出口隔离。",
+]
+priority = "P1"
+impact_confidentiality = "medium"
+impact_integrity = "low"
+impact_availability = "medium"
+impact_rationale = "真实部署中可能访问内网服务、云元数据地址或体积异常的响应。"
+likelihood = "medium"
+likelihood_rationale = "默认课程路径受控，但工具本身没有把这一假设固化为强制策略。"
+
+[[threats]]
+id = "THR-004"
+title = "审计日志形成新的敏感数据副本"
+description = "Tool Executor 会把完整参数和输出写入 audit.jsonl，包括 read_file 返回的文件内容。"
+sources = ["CMP-004"]
+entry_flows = ["DF-015"]
+affected_assets = ["AST-003", "AST-006"]
+affected_components = ["CMP-004", "CMP-011"]
+trust_boundaries = ["TB-006"]
+attack_flows = ["DF-008", "DF-009", "DF-015"]
+preconditions = [
+  "工具参数或输出中包含敏感内容。",
+  "审计日志被持久化。",
+]
+current_controls = [
+  "日志只写入本地 .lab-output 目录。",
+  ".lab-output 已被 Git 忽略。",
+]
+control_gaps = [
+  "没有字段级脱敏或内容摘要。",
+  "没有访问控制和保留期限。",
+]
+priority = "P1"
+impact_confidentiality = "high"
+impact_integrity = "low"
+impact_availability = "low"
+impact_rationale = "审计系统本来用于取证，但完整复制敏感内容会扩大需要保护的数据范围。"
+likelihood = "high"
+likelihood_rationale = "第一讲攻击 Replay 每次都会把合成文件内容写入审计日志。"
+
+[[threats]]
+id = "THR-005"
+title = "正常工具组合形成数据外传能力"
+description = "read_file 和 send_diagnostic 单独看都符合业务用途，组合后却能把本地内容送到另一个接收方。"
+sources = ["CMP-003"]
+entry_flows = ["DF-004"]
+affected_assets = ["AST-003", "AST-004"]
+affected_components = ["CMP-004", "CMP-006", "CMP-007", "CMP-009", "CMP-010"]
+trust_boundaries = ["TB-004", "TB-005"]
+attack_flows = ["DF-004", "DF-005", "DF-008", "DF-009", "DF-012", "DF-013", "DF-004", "DF-005", "DF-010", "DF-011"]
+preconditions = [
+  "同一次任务同时拥有读取和发送两种能力。",
+  "执行器不检查工具之间的数据来源与去向。",
+]
+current_controls = [
+  "读取源和发送目标都被限制在本地教学环境。",
+  "诊断接收器提供可观察的副作用证据。",
+]
+control_gaps = [
+  "授权只停留在工具是否存在，没有约束工具组合。",
+  "没有控制数据能从哪个来源流向哪个目的地。",
+]
+priority = "P1"
+impact_confidentiality = "high"
+impact_integrity = "medium"
+impact_availability = "low"
+impact_rationale = "工具组合可以绕过单个工具看似合理的权限边界，形成完整读取与发送链路。"
+likelihood = "medium"
+likelihood_rationale = "第一讲 Replay 已经确定性复现该组合，Live 是否提出相同组合则具有不确定性。"
+
+[[requirements]]
+id = "SR-001"
+title = "标记内容来源与信任等级"
+statement = "进入模型上下文的网页和工具结果必须携带来源与信任等级，且不得自动升级为用户授权。"
+derived_from = ["THR-001"]
+control_type = "prompt-and-context"
+planned_lessons = ["04", "05", "06", "07"]
+
+[[requirements]]
+id = "SR-002"
+title = "执行前进行任务级工具授权"
+statement = "执行器必须依据用户任务独立判断本次调用是否必要且已授权，不能把模型提议直接视为批准。"
+derived_from = ["THR-001", "THR-005"]
+control_type = "authorization"
+planned_lessons = ["09"]
+
+[[requirements]]
+id = "SR-003"
+title = "限制可访问资源范围"
+statement = "文件和其他资源访问必须绑定到当前任务的最小 Scope。"
+derived_from = ["THR-001", "THR-005"]
+control_type = "resource-scope"
+planned_lessons = ["10"]
+
+[[requirements]]
+id = "SR-004"
+title = "控制数据来源与发送目的地"
+statement = "系统必须根据数据来源、分类和目的地决定是否允许发送，并对高风险操作要求审批。"
+derived_from = ["THR-001", "THR-005"]
+control_type = "data-flow-policy"
+planned_lessons = ["09", "10", "11"]
+
+[[requirements]]
+id = "SR-005"
+title = "检查发往外部模型的工具结果"
+statement = "工具结果离开本地信任域前必须经过敏感数据识别、最小化和必要脱敏。"
+derived_from = ["THR-002"]
+control_type = "data-protection"
+planned_lessons = ["07", "16"]
+
+[[requirements]]
+id = "SR-006"
+title = "保护审计数据"
+statement = "审计记录必须避免复制不必要的敏感内容，并具有访问控制和保留策略。"
+derived_from = ["THR-004"]
+control_type = "audit-security"
+planned_lessons = ["16"]
+
+[[requirements]]
+id = "SR-007"
+title = "限制网页工具网络出口"
+statement = "网页工具必须限制协议、目标地址和可访问网络，并拒绝未批准目标。"
+derived_from = ["THR-003"]
+control_type = "network-policy"
+planned_lessons = ["09", "15"]
+
+[[verifications]]
+id = "VER-001"
+type = "verification-plan"
+description = "使用带网页指令的 Case，验证页面内容不能自动扩大用户任务。"
+verifies_requirements = ["SR-001"]
+
+[[verifications]]
+id = "VER-002"
+type = "verification-plan"
+description = "Replay 提交未授权工具调用，断言执行器拒绝并记录原因。"
+verifies_requirements = ["SR-002"]
+
+[[verifications]]
+id = "VER-003"
+type = "verification-plan"
+description = "尝试读取任务 Scope 外的文件，断言访问被拒绝。"
+verifies_requirements = ["SR-003"]
+
+[[verifications]]
+id = "VER-004"
+type = "verification-plan"
+description = "把敏感来源数据发送到未批准目的地，断言发送被阻断或进入审批。"
+verifies_requirements = ["SR-004"]
+
+[[verifications]]
+id = "VER-005"
+type = "verification-plan"
+description = "检查发往模型服务的请求，断言敏感字段已经被移除或脱敏。"
+verifies_requirements = ["SR-005"]
+
+[[verifications]]
+id = "VER-006"
+type = "verification-plan"
+description = "检查审计输出，断言文件正文和凭证不会以明文重复保存。"
+verifies_requirements = ["SR-006"]
+
+[[verifications]]
+id = "VER-007"
+type = "verification-plan"
+description = "请求访问允许列表外域名和内网地址，断言网页工具拒绝请求。"
+verifies_requirements = ["SR-007"]

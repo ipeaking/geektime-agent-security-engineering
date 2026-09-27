@@ -1,0 +1,159 @@
+[[data_flows]]
+id = "DF-001"
+name = "提交任务"
+source = "ACT-001"
+destination = "CMP-001"
+assets = ["AST-001"]
+crosses = ["TB-001"]
+channel = "CLI"
+description = "使用者通过命令行选择 Case、Provider 和模型。"
+
+[[data_flows]]
+id = "DF-002"
+name = "启动 Agent 运行"
+source = "CMP-001"
+destination = "CMP-002"
+assets = ["AST-001"]
+crosses = []
+channel = "Python call"
+description = "Runner 把任务和本地页面 URL 交给 Runtime。"
+
+[[data_flows]]
+id = "DF-003"
+name = "发送模型请求"
+source = "CMP-002"
+destination = "CMP-003"
+assets = ["AST-001", "AST-002"]
+crosses = ["TB-003"]
+channel = "HTTPS"
+description = "Live Runtime 把当前上下文和工具结构发送给外部模型服务。"
+
+[[data_flows]]
+id = "DF-004"
+name = "返回函数调用提议"
+source = "CMP-003"
+destination = "CMP-002"
+assets = ["AST-004"]
+crosses = ["TB-003"]
+channel = "HTTPS"
+description = "模型返回 function_call；它只是提议，不是授权。"
+
+[[data_flows]]
+id = "DF-005"
+name = "提交 ToolCall"
+source = "CMP-002"
+destination = "CMP-004"
+assets = ["AST-001", "AST-004"]
+crosses = ["TB-004"]
+channel = "Python call"
+description = "Runtime 把模型提议转换为 ToolCall 并交给执行器。"
+
+[[data_flows]]
+id = "DF-006"
+name = "调用网页工具"
+source = "CMP-004"
+destination = "CMP-005"
+assets = ["AST-004"]
+crosses = ["TB-005"]
+channel = "Python call"
+description = "执行器直接执行 fetch_webpage。"
+
+[[data_flows]]
+id = "DF-007"
+name = "返回外部网页内容"
+source = "CMP-008"
+destination = "CMP-005"
+assets = ["AST-002"]
+crosses = ["TB-002"]
+channel = "HTTP response"
+description = "本地页面服务把原始 HTML 返回给网页工具，其中可能包含内容作者控制的指令。"
+
+[[data_flows]]
+id = "DF-008"
+name = "调用文件工具"
+source = "CMP-004"
+destination = "CMP-006"
+assets = ["AST-004"]
+crosses = ["TB-005"]
+channel = "Python call"
+description = "执行器直接执行 read_file。"
+
+[[data_flows]]
+id = "DF-009"
+name = "读取合成配置"
+source = "CMP-006"
+destination = "CMP-009"
+assets = ["AST-003"]
+crosses = ["TB-005"]
+channel = "filesystem"
+description = "文件工具读取工作区中的 demo-config.json。"
+
+[[data_flows]]
+id = "DF-010"
+name = "调用诊断工具"
+source = "CMP-004"
+destination = "CMP-007"
+assets = ["AST-003", "AST-004"]
+crosses = ["TB-005"]
+channel = "Python call"
+description = "执行器把文件工具结果作为 payload 交给 send_diagnostic。"
+
+[[data_flows]]
+id = "DF-011"
+name = "提交诊断数据"
+source = "CMP-007"
+destination = "CMP-010"
+assets = ["AST-003"]
+crosses = ["TB-005"]
+channel = "HTTP POST"
+description = "文件内容被发送到本地诊断接收器，形成受控外传副作用。"
+
+[[data_flows]]
+id = "DF-012"
+name = "返回工具结果"
+source = "CMP-004"
+destination = "CMP-002"
+assets = ["AST-002", "AST-003"]
+crosses = ["TB-004"]
+channel = "Python return"
+description = "工具输出回到 Runtime，可能包含完整文件内容。"
+
+[[data_flows]]
+id = "DF-013"
+name = "发送工具结果给模型"
+source = "CMP-002"
+destination = "CMP-003"
+assets = ["AST-002", "AST-003"]
+crosses = ["TB-003"]
+channel = "HTTPS"
+description = "Live Runtime 把 ToolResult 包装为 function_call_output 发回外部模型。"
+
+[[data_flows]]
+id = "DF-014"
+name = "记录 Agent 审计事件"
+source = "CMP-002"
+destination = "CMP-011"
+assets = ["AST-006"]
+crosses = ["TB-006"]
+channel = "filesystem"
+description = "Runtime 记录运行开始、完成和最终回答。"
+
+[[data_flows]]
+id = "DF-015"
+name = "记录工具审计事件"
+source = "CMP-004"
+destination = "CMP-011"
+assets = ["AST-003", "AST-006"]
+crosses = ["TB-006"]
+channel = "filesystem"
+description = "执行器记录完整工具参数和输出，其中可能包含文件内容。"
+
+[[data_flows]]
+id = "DF-016"
+name = "认证模型 API"
+source = "CMP-002"
+destination = "CMP-003"
+assets = ["AST-005"]
+crosses = ["TB-003"]
+channel = "HTTPS authorization"
+description = "OpenAI 兼容客户端使用环境中的 API Key 调用外部模型服务。"
