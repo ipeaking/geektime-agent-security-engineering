@@ -5,7 +5,8 @@
 ## 课程代码地图
 
 - 第 01 讲 `lesson-01-prompt-injection`：用 Live 与 Replay 研究间接提示词注入及其工程后果。
-- 第 02 讲（当前开发版本）：为第一讲的 Agent 建立可校验、可生成报告的威胁模型。
+- 第 02 讲 `lesson-02-threat-model`：把参与者、资产、边界和威胁保存成可校验的 Threat Model as Code。
+- 第 03 讲（当前开发版本）：用 Context Lab 观察同一注入载荷从不同来源、包装方式和 Prompt Profile 进入上下文时的模型行为。
 
 切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
 
@@ -222,3 +223,18 @@ make lesson-02
 ```
 
 详细说明见 `labs/lesson_02_threat_model/README.md`，生成的完整报告位于 `labs/lesson_02_threat_model/generated/threat_model_report.md`。
+
+## 第 03 讲：Context Lab
+
+第三讲使用六个控制变量 Case，把确定性的上下文构建与真实模型观察分开：
+
+```bash
+make context-lab-inspect
+make context-lab-render
+make context-lab-check
+make lesson-03
+```
+
+`make lesson-03` 不调用模型、不访问公网，也不需要 API Key。确认实验内容全部是合成数据后，可以手工运行 `make context-lab-live` 和 `make context-lab-report`。Live 中的 Observation Executor 只记录 `read_file` 和 `send_diagnostic` 提议，不执行敏感工具；它是测量装置，不是生产安全防御。
+
+详细说明见 `labs/lesson_03_prompt_injection_mechanism/README.md`。
