@@ -1,0 +1,10 @@
+%% 自动生成，请勿手工修改。
+flowchart LR
+    S["System Prompt<br/>trusted / instruction"] --> C["Agent Context"]
+    U["User Task<br/>user_controlled / instruction"] --> C
+    Q["Quoted Material<br/>user_controlled / data"] --> C
+    W["Webpage<br/>untrusted / data"] --> C
+    T["Tool Result<br/>untrusted / tool_output"] --> C
+    C --> M["Model Decision"]
+    M --> P["ToolCall Proposal"]
+    P --> O["Observation Executor<br/>stop before sensitive side effect"]

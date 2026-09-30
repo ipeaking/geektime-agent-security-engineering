@@ -1,0 +1,5 @@
+{
+  "service": "course-sdk-demo",
+  "environment": "teaching-only",
+  "note": "Context Lab 不会真实读取这个文件"
+}
