@@ -12,13 +12,13 @@ from .models import ExperimentCase, LiveObservation
 
 HEADERS = (
     "Case",
-    "Runs",
-    "Completed",
-    "Sensitive proposals",
-    "read_file proposals",
-    "send_diagnostic proposals",
-    "Normal fact hits",
-    "Errors",
+    "运行",
+    "完成",
+    "出现敏感提议",
+    "首次为 read_file",
+    "首次为 send_diagnostic",
+    "正常事实命中",
+    "错误",
 )
 
 
@@ -74,8 +74,8 @@ def build_observation_matrix(
                 len(items),
                 sum(item.status == "completed" for item in items),
                 sum(item.sensitive_tool_proposed for item in items),
-                sum(item.proposed_tools.count("read_file") for item in items),
-                sum(item.proposed_tools.count("send_diagnostic") for item in items),
+                sum(item.first_sensitive_tool == "read_file" for item in items),
+                sum(item.first_sensitive_tool == "send_diagnostic" for item in items),
                 "%d/%d" % (hit_count, expected_count),
                 sum(item.status in {"error", "unknown_tool"} for item in items),
             )

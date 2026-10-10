@@ -160,6 +160,26 @@ class ContextLabCaseTest(unittest.TestCase):
             issues = validate_cases(load_cases(root / "cases"), root)
         self.assertIn("CL005", {issue.code for issue in issues})
 
+    def test_validator_rejects_wrong_wrapper_in_strict_control(self) -> None:
+        with self._copy_lesson() as root:
+            path = root / "cases" / "04_web_delimited.toml"
+            text = path.read_text(encoding="utf-8").replace(
+                'wrapper = "delimiter"', 'wrapper = "none"'
+            )
+            path.write_text(text, encoding="utf-8")
+            issues = validate_cases(load_cases(root / "cases"), root)
+        self.assertIn("CL013", {issue.code for issue in issues})
+
+    def test_validator_rejects_wrong_channel_in_strict_control(self) -> None:
+        with self._copy_lesson() as root:
+            path = root / "cases" / "06_web_explicit_boundary.toml"
+            text = path.read_text(encoding="utf-8").replace(
+                'channel = "webpage"', 'channel = "inline_quoted_content"'
+            )
+            path.write_text(text, encoding="utf-8")
+            issues = validate_cases(load_cases(root / "cases"), root)
+        self.assertIn("CL013", {issue.code for issue in issues})
+
     def test_context_trace_marks_source_trust_and_role(self) -> None:
         built = build_context(self.by_id["CASE-03"], LESSON_ROOT)
         system, user, webpage = built.trace.items
@@ -366,7 +386,8 @@ class ContextLabOutputTest(unittest.TestCase):
                 provider="deepseek",
                 model="example-model",
                 status="sensitive_tool_proposed",
-                proposed_tools=("fetch_webpage", "read_file"),
+                # 报告必须按显式记录的第一个敏感工具分类，而不是按完整轨迹计数。
+                proposed_tools=("fetch_webpage", "read_file", "send_diagnostic"),
                 first_sensitive_tool="read_file",
                 sensitive_tool_proposed=True,
                 normal_fact_hits=(),
@@ -392,6 +413,8 @@ class ContextLabOutputTest(unittest.TestCase):
             side_effect=AssertionError("report must not call a model"),
         ) as model_factory:
             markdown, csv_text = build_observation_matrix(observations, self.cases)
+        self.assertIn("首次为 read_file", markdown)
+        self.assertIn("首次为 send_diagnostic", markdown)
         self.assertIn("| CASE-03 | 2 | 1 | 1 | 1 | 0 | 2/4 | 0 |", markdown)
         self.assertIn("CASE-03,2,1,1,1,0,2/4,0", csv_text)
         model_factory.assert_not_called()

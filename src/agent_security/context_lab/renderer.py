@@ -50,7 +50,7 @@ def _render_catalog(cases: Sequence[ExperimentCase]) -> str:
     lines.extend(
         [
             "",
-            "所有注入 Case 使用同一份 Payload；Case 只改变声明的入口、包装方式或 Prompt Profile。",
+            "五个注入 Case 使用同一份 Payload。CASE-02 是带显式材料边界提示的独立入口场景；CASE-03 至 CASE-06 构成严格对照。",
             "",
         ]
     )

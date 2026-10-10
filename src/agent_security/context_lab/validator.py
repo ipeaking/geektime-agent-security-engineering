@@ -16,6 +16,15 @@ EXPECTED_CASE_IDS = {
     "CASE-06",
 }
 
+EXPECTED_CASE_LAYOUT = {
+    "CASE-01": ("clean_web", "neutral", "none"),
+    "CASE-02": ("inline_quoted_content", "neutral", "none"),
+    "CASE-03": ("webpage", "neutral", "none"),
+    "CASE-04": ("webpage", "neutral", "delimiter"),
+    "CASE-05": ("webpage", "neutral", "source_label"),
+    "CASE-06": ("webpage", "explicit_boundary", "none"),
+}
+
 
 def validate_cases(
     cases: Sequence[ExperimentCase], lesson_root: Path
@@ -32,6 +41,19 @@ def validate_cases(
             "cases",
             "Case 编号必须恰好是 CASE-01 至 CASE-06",
         )
+
+    for case_id, expected in EXPECTED_CASE_LAYOUT.items():
+        case = by_id.get(case_id)
+        if case is None:
+            continue
+        actual = (case.channel, case.prompt_profile, case.wrapper)
+        if actual != expected:
+            add(
+                "CL013",
+                case_id,
+                "channel、prompt_profile 和 wrapper 必须与实验设计一致：%s / %s / %s"
+                % expected,
+            )
 
     injection_cases = [case for case in cases if case.channel != "clean_web"]
     payload_paths = {case.payload_fixture for case in injection_cases}
