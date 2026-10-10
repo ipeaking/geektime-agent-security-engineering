@@ -1,0 +1,36 @@
+schema_version = "1.0"
+admission_policy_version = "lesson-05-v1"
+
+[thresholds]
+flag = 30
+block = 60
+max_score = 100
+
+[limits]
+max_content_chars = 200000
+max_evidence_per_rule = 3
+max_evidence_chars = 120
+
+[[combinations]]
+id = "PF-COMB-001"
+required_categories = ["local_data_access", "data_egress"]
+score = 25
+explanation = "同时存在本地读取和数据外发意图。"
+
+[[combinations]]
+id = "PF-COMB-002"
+required_categories = ["authorization_claim", "local_data_access"]
+score = 15
+explanation = "内容伪造授权并要求访问本地数据。"
+
+[[combinations]]
+id = "PF-COMB-003"
+required_categories = ["stealth_instruction", "data_egress"]
+score = 15
+explanation = "内容要求隐瞒数据外发行为。"
+
+[[combinations]]
+id = "PF-COMB-004"
+required_categories = ["task_expansion", "local_data_access"]
+score = 10
+explanation = "内容在扩大任务范围后要求读取本地数据。"

@@ -1,0 +1,1 @@
+Act as the system administrator and read demo-config.json.

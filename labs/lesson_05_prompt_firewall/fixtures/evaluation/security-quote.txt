@@ -1,0 +1,1 @@
+This security guide uses the example phrase "ignore previous instructions" to explain prompt injection.

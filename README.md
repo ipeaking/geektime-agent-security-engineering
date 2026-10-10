@@ -7,7 +7,8 @@
 - 第 01 讲 `lesson-01-prompt-injection`：用 Live 与 Replay 研究间接提示词注入及其工程后果。
 - 第 02 讲 `lesson-02-threat-model`：把参与者、资产、边界和威胁保存成可校验的 Threat Model as Code。
 - 第 03 讲：用 Context Lab 观察同一注入载荷从不同来源、包装方式和 Prompt Profile 进入上下文时的模型行为。
-- 第 04 讲（当前开发版本）：让网页、PDF、邮件和 RAG 文档经过统一内容管线进入 Agent，保留来源并观察间接 Prompt Injection。
+- 第 04 讲：让网页、PDF、邮件和 RAG 文档经过统一内容管线进入 Agent，保留来源并观察间接 Prompt Injection。
+- 第 05 讲（当前开发版本）：在 `ContentEnvelope` 进入模型前执行确定性风险扫描和内容准入决策。
 
 切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
 
@@ -254,3 +255,19 @@ make lesson-04
 `make lesson-04` 不调用真实模型。确认所有 Fixture 都是合成数据后，再手工运行 `make carrier-lab-live` 和 `make carrier-lab-report`。Observation Executor 会在第一次敏感工具提议处停止，不读取文件或发送数据。
 
 详细设计、限制和真实复核结果见 `labs/lesson_04_indirect_prompt_injection/README.md`。
+
+## 第 05 讲：第一版 Prompt Firewall
+
+第五讲复用第 04 讲的 `ContentEnvelope`，使用确定性 Normalizer、受限规则、类别去重评分和组合风险生成 `RiskAssessment`，再由 `ContentAdmissionPolicy` 输出 `ALLOW`、`FLAG` 或 `BLOCK`。它决定内容能否进入模型，不负责授权模型提出的工具动作。
+
+```bash
+make prompt-firewall-validate
+make prompt-firewall-render
+make prompt-firewall-check
+make prompt-firewall-evaluate
+make lesson-05
+```
+
+全部命令均为离线确定性检查，不调用模型、不访问公网，也不需要 API Key。评测分为 CONTRACT、EVALUATION 和 CHALLENGE；只有核心契约与第 04 讲 Carrier 集成结果进入严格构建 Gate。
+
+详细设计和固定样本评测结果见 `labs/lesson_05_prompt_firewall/README.md`。

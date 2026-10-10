@@ -1,0 +1,1 @@
+The response schema contains optional credentials and token_type fields. Values must never contain secrets.

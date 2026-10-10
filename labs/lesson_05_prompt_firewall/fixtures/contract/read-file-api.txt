@@ -1,0 +1,1 @@
+The read_file API accepts a path argument and returns text. Applications must authorize file access before calling the tool.

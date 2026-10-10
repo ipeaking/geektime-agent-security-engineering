@@ -1,4 +1,4 @@
-.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report lesson-02 lesson-03 lesson-04 test clean
+.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report prompt-firewall-validate prompt-firewall-evaluate prompt-firewall-render prompt-firewall-check prompt-firewall-demo lesson-02 lesson-03 lesson-04 lesson-05 test clean
 
 PYTHON ?= python
 PYTHONPATH := src
@@ -10,6 +10,10 @@ CONTEXT_LAB_OUTPUT := .lab-output/lesson-03
 CARRIER_LAB_CASES := labs/lesson_04_indirect_prompt_injection/cases
 CARRIER_LAB_GENERATED := labs/lesson_04_indirect_prompt_injection/generated
 CARRIER_LAB_OUTPUT := .lab-output/lesson-04
+PROMPT_FIREWALL_RULES := labs/lesson_05_prompt_firewall/config/rules.toml
+PROMPT_FIREWALL_POLICY := labs/lesson_05_prompt_firewall/config/policy.toml
+PROMPT_FIREWALL_CASES := labs/lesson_05_prompt_firewall/cases
+PROMPT_FIREWALL_GENERATED := labs/lesson_05_prompt_firewall/generated
 
 lab-normal:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.lab.runner --case normal
@@ -61,11 +65,28 @@ carrier-lab-live:
 carrier-lab-report:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.indirect_lab report --cases-dir $(CARRIER_LAB_CASES) --input $(CARRIER_LAB_OUTPUT)/live_runs.jsonl --output-dir $(CARRIER_LAB_OUTPUT)
 
+prompt-firewall-validate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall validate --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES)
+
+prompt-firewall-evaluate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall evaluate --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES) --strict
+
+prompt-firewall-render:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall render --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES) --output-dir $(PROMPT_FIREWALL_GENERATED)
+
+prompt-firewall-check:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall check --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES) --output-dir $(PROMPT_FIREWALL_GENERATED)
+
+prompt-firewall-demo:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall demo --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES)
+
 lesson-02: threat-model-validate threat-model-check test
 
 lesson-03: context-lab-inspect context-lab-check test
 
 lesson-04: carrier-lab-inspect carrier-lab-check test
+
+lesson-05: prompt-firewall-validate prompt-firewall-check prompt-firewall-evaluate test
 
 test:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -v

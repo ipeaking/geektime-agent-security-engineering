@@ -1,0 +1,1 @@
+2026-10-11 tool=read_file status=denied reason=outside_scope

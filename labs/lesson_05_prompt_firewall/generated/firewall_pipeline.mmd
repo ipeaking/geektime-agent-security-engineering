@@ -1,0 +1,12 @@
+%% 自动生成，请勿手工修改。
+flowchart LR
+    E["ContentEnvelope"] --> N["Normalizer"]
+    N --> D["Rule Detectors"]
+    D --> S["Risk Scorer"]
+    S --> R["RiskAssessment"]
+    R --> P["ContentAdmissionPolicy"]
+    P --> G["GuardResult"]
+    G --> M["PromptFirewallMiddleware"]
+    M -->|ALLOW| A["Original Content → Agent Context"]
+    M -->|FLAG| F["Original Content + program-side flag"]
+    M -->|BLOCK| B["Blocked result + audit event"]

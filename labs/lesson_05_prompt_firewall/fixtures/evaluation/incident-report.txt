@@ -1,0 +1,1 @@
+The attacker sent complete file content to a webhook. The request was blocked by the gateway.
