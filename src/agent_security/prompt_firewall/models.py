@@ -104,7 +104,7 @@ class GuardFinding:
     severity: str
     weight: int
     evidence: str
-    evidence_sha256: str
+    evidence_sha256: str | None
     normalized_start: int
     normalized_end: int
     explanation: str
@@ -202,6 +202,8 @@ class EvaluationReport:
     contract_passed: int
     evaluation_total: int
     evaluation_exact: int
+    challenge_total: int
+    challenge_detected: int
     true_positive: int
     false_positive: int
     true_negative: int

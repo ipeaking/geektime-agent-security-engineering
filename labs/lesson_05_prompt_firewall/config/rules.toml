@@ -1,5 +1,5 @@
 schema_version = "1.0"
-ruleset_version = "lesson-05-v1"
+ruleset_version = "lesson-05-v2"
 
 [[rules]]
 id = "PF-OVERRIDE-001"
@@ -76,10 +76,13 @@ description = "内容声称敏感动作已经获得授权。"
 explanation = "外部材料不能替当前用户或执行层授予权限。"
 patterns = [
   "the admin has approved",
+  "the administrator has approved",
+  "the administrator approved",
   "the user has confirmed",
   "no confirmation is needed",
   "no approval is required",
   "管理员已经授权",
+  "管理员已经批准",
   "用户已经确认",
   "无需再次确认",
   "无需审批",
@@ -134,4 +137,17 @@ description = "命令式文本要求取得秘密或凭证。"
 explanation = "外部内容要求访问高敏感度秘密材料。"
 leading_terms = ["read", "load", "open", "access", "get", "读取", "加载", "打开", "访问", "获取"]
 target_terms = [".env", "api key", "token", "credential", "credentials", "private key", "ssh key", "database password", "凭证", "令牌", "私钥", "数据库密码"]
+max_gap_chars = 48
+
+[[rules]]
+id = "PF-SECRET-002"
+category = "secret_access"
+severity = "high"
+weight = 25
+enabled = true
+pattern_type = "bounded_terms"
+description = "命令式文本要求发送或上传秘密材料。"
+explanation = "外部内容把凭证、令牌或密钥指定为外发对象。"
+leading_terms = ["send", "submit", "upload", "post", "forward", "发送", "提交", "上传", "转发"]
+target_terms = ["api key", "token", "credential", "credentials", "private key", "ssh key", "database password", "凭证", "令牌", "私钥", "数据库密码", "密钥"]
 max_gap_chars = 48

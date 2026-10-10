@@ -38,16 +38,19 @@ class RuleDetector:
             )
             for start, end in list(matches)[: self.max_evidence_per_rule]:
                 raw_evidence = normalized.text[start:end]
+                redacted_evidence = self._redact(raw_evidence)
                 findings.append(
                     GuardFinding(
                         rule_id=rule.id,
                         category=rule.category,
                         severity=rule.severity,
                         weight=rule.weight,
-                        evidence=self._redact(raw_evidence)[: self.max_evidence_chars],
-                        evidence_sha256=hashlib.sha256(
-                            raw_evidence.encode("utf-8")
-                        ).hexdigest(),
+                        evidence=redacted_evidence[: self.max_evidence_chars],
+                        evidence_sha256=(
+                            None
+                            if redacted_evidence != raw_evidence
+                            else hashlib.sha256(raw_evidence.encode("utf-8")).hexdigest()
+                        ),
                         normalized_start=start,
                         normalized_end=end,
                         explanation=rule.explanation,

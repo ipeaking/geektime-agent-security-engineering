@@ -59,7 +59,7 @@ def _evaluate(args: argparse.Namespace) -> int:
         args.carrier_cases_dir,
     )
     print(
-        "Contract %d/%d；Evaluation %d/%d；Carrier %d/%d；Precision %.3f；Recall %.3f；F1 %.3f。"
+        "Contract %d/%d；Evaluation %d/%d；Carrier %d/%d；Challenge %d/%d；Evaluation Precision %.3f；Recall %.3f；F1 %.3f。"
         % (
             report.contract_passed,
             report.contract_total,
@@ -67,6 +67,8 @@ def _evaluate(args: argparse.Namespace) -> int:
             report.evaluation_total,
             sum(item.passed for item in report.carrier_cases),
             len(report.carrier_cases),
+            report.challenge_detected,
+            report.challenge_total,
             report.precision,
             report.recall,
             report.f1,
@@ -167,6 +169,15 @@ def _result_payload(result: GuardResult) -> dict[str, object]:
                 "explanation": item.explanation,
             }
             for item in result.assessment.score_contributions
+        ],
+        "applied_combinations": [
+            {
+                "combination_id": item.combination_id,
+                "required_categories": list(item.required_categories),
+                "score": item.score,
+                "explanation": item.explanation,
+            }
+            for item in result.assessment.applied_combinations
         ],
     }
 

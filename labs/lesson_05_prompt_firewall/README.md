@@ -21,7 +21,7 @@ ContentEnvelope
 - `FLAG`：原文继续进入模型，`GuardResult` 只保存在程序侧，不拼接到正文；
 - `BLOCK`：enforce 模式不转发正文，observe 模式仍转发但记录阻断判断。
 
-Firewall 不重写 `envelope.content`。规范化文本只在扫描期间存在，报告只保存内容哈希、限长脱敏证据、脱敏前匹配片段的 SHA-256 和规范化位置，不保存证据原值之外的上下文窗口。
+Firewall 不重写 `envelope.content`。规范化文本只在扫描期间存在，报告只保存内容哈希、限长脱敏证据和规范化位置，不保存证据原值之外的上下文窗口。普通 Evidence 可以保存 SHA-256 用于稳定关联；一旦 Evidence 发生秘密脱敏，`evidence_sha256` 为 `null`，避免为低熵秘密留下可离线猜测的普通哈希。
 
 风险分数按类别去重：同一类别命中多条规则时只取最高权重，再添加明确记录的组合风险分。它是当前规则集和准入策略下的工程分值，不是攻击概率、恶意概率或模型安全概率。
 
@@ -35,9 +35,9 @@ Firewall 不重写 `envelope.content`。规范化文本只在扫描期间存在�
 
 ## 评测集
 
-固定数据集包含 32 个 Case：
+固定数据集包含 34 个 Case：
 
-- CONTRACT：12 个核心行为契约，失败会阻断严格评测；
+- CONTRACT：14 个核心行为契约，失败会阻断严格评测；
 - EVALUATION：12 个边界与误报控制样本，用于描述性指标；
 - CHALLENGE：8 个绕过样本，不进入构建 Gate。
 
@@ -94,13 +94,13 @@ PYTHONPATH=src .venv/bin/python -m agent_security.prompt_firewall scan \
 
 ## 本版本的确定性结果
 
-在 `v0.5.0-lesson-05-prompt-firewall` 发布前执行上述命令，结果为：
+在 `v0.5.1-lesson-05-prompt-firewall` 发布前执行上述命令，结果为：
 
-- Contract：12/12；
+- Contract：14/14；
 - Evaluation 精确决策：12/12；
 - 第 04 讲 Carrier 集成：8/8；
 - 固定 Evaluation 集上的 Precision、Recall、F1：均为 1.000；
 - Challenge：8 个样本中识别 5 个，漏过英文委婉改写、Base64 和中文委婉改写 3 个；
-- `make lesson-05`：全部 109 项课程测试通过。
+- `make lesson-05`：全部 112 项课程测试通过。
 
 Challenge 的漏检是第一版能力边界的组成部分，不进入严格 Gate。固定样本上的 1.000 也不是生产环境准确率；它只说明当前实现与版本控制中的期望一致。

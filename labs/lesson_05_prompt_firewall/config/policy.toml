@@ -1,5 +1,5 @@
 schema_version = "1.0"
-admission_policy_version = "lesson-05-v1"
+admission_policy_version = "lesson-05-v2"
 
 [thresholds]
 flag = 30
@@ -34,3 +34,15 @@ id = "PF-COMB-004"
 required_categories = ["task_expansion", "local_data_access"]
 score = 10
 explanation = "内容在扩大任务范围后要求读取本地数据。"
+
+[[combinations]]
+id = "PF-COMB-005"
+required_categories = ["secret_access", "data_egress"]
+score = 20
+explanation = "内容要求把凭证、令牌或密钥发送到外部目的地。"
+
+[[combinations]]
+id = "PF-COMB-006"
+required_categories = ["authorization_claim", "data_egress"]
+score = 15
+explanation = "内容伪造授权并要求向外部目的地发送数据。"

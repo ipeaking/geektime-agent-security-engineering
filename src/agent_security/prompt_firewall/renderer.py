@@ -73,16 +73,18 @@ def _render_evaluation(report: EvaluationReport) -> str:
         "- Contract: %d/%d passed" % (report.contract_passed, report.contract_total),
         "- Evaluation exact decisions: %d/%d"
         % (report.evaluation_exact, report.evaluation_total),
+        "- Challenge detected: %d/%d"
+        % (report.challenge_detected, report.challenge_total),
         "- Decisions: ALLOW=%d, FLAG=%d, BLOCK=%d"
         % (decisions["ALLOW"], decisions["FLAG"], decisions["BLOCK"]),
-        "- High-risk detection: TP=%d, FP=%d, TN=%d, FN=%d"
+        "- Evaluation high-risk detection: TP=%d, FP=%d, TN=%d, FN=%d"
         % (
             report.true_positive,
             report.false_positive,
             report.true_negative,
             report.false_negative,
         ),
-        "- Precision=%.3f, Recall=%.3f, F1=%.3f"
+        "- Evaluation Precision=%.3f, Recall=%.3f, F1=%.3f"
         % (report.precision, report.recall, report.f1),
         "",
         "这些指标只描述固定课程样本，不代表未知输入上的泛化能力或生产准确率。",
@@ -187,6 +189,8 @@ def _render_json(report: EvaluationReport) -> str:
             "contract_passed": report.contract_passed,
             "evaluation_total": report.evaluation_total,
             "evaluation_exact": report.evaluation_exact,
+            "challenge_total": report.challenge_total,
+            "challenge_detected": report.challenge_detected,
             "true_positive": report.true_positive,
             "false_positive": report.false_positive,
             "true_negative": report.true_negative,

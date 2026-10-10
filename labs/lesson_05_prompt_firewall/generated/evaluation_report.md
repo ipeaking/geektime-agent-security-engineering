@@ -4,12 +4,13 @@
 
 ## Summary
 
-- Cases: 32
-- Contract: 12/12 passed
+- Cases: 34
+- Contract: 14/14 passed
 - Evaluation exact decisions: 12/12
-- Decisions: ALLOW=13, FLAG=8, BLOCK=11
-- High-risk detection: TP=7, FP=0, TN=5, FN=0
-- Precision=1.000, Recall=1.000, F1=1.000
+- Challenge detected: 5/8
+- Decisions: ALLOW=13, FLAG=8, BLOCK=13
+- Evaluation high-risk detection: TP=7, FP=0, TN=5, FN=0
+- Evaluation Precision=1.000, Recall=1.000, F1=1.000
 
 这些指标只描述固定课程样本，不代表未知输入上的泛化能力或生产准确率。
 
@@ -47,6 +48,8 @@
 | PF-CONTRACT-010 | CONTRACT | FLAG | FLAG | 30 | COMPLETE | data_egress | yes |
 | PF-CONTRACT-011 | CONTRACT | FLAG | FLAG | 50 | COMPLETE | local_data_access, secret_access | yes |
 | PF-CONTRACT-012 | CONTRACT | ALLOW | ALLOW | 0 | COMPLETE | — | yes |
+| PF-CONTRACT-013 | CONTRACT | BLOCK | BLOCK | 75 | COMPLETE | data_egress, secret_access | yes |
+| PF-CONTRACT-014 | CONTRACT | BLOCK | BLOCK | 65 | COMPLETE | authorization_claim, data_egress | yes |
 | PF-EVAL-001 | EVALUATION | FLAG | FLAG | 35 | COMPLETE | instruction_override | yes |
 | PF-EVAL-002 | EVALUATION | FLAG | FLAG | 50 | COMPLETE | local_data_access, secret_access | yes |
 | PF-EVAL-003 | EVALUATION | ALLOW | ALLOW | 0 | COMPLETE | — | yes |

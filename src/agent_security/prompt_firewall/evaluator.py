@@ -73,6 +73,7 @@ def evaluate(
     carrier = _evaluate_carriers(firewall, carrier_cases_dir)
     contract = tuple(item for item in evaluated if item.case.suite is CaseSuite.CONTRACT)
     evaluation = tuple(item for item in evaluated if item.case.suite is CaseSuite.EVALUATION)
+    challenge = tuple(item for item in evaluated if item.case.suite is CaseSuite.CHALLENGE)
     tp = fp = tn = fn = 0
     for item in evaluation:
         expected_positive = item.case.expected_decision in {
@@ -101,6 +102,8 @@ def evaluate(
         contract_passed=sum(item.passed for item in contract),
         evaluation_total=len(evaluation),
         evaluation_exact=sum(item.passed for item in evaluation),
+        challenge_total=len(challenge),
+        challenge_detected=sum(item.passed for item in challenge),
         true_positive=tp,
         false_positive=fp,
         true_negative=tn,
