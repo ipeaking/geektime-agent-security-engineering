@@ -30,7 +30,7 @@ transformations / metadata / content
 
 解析成功只说明程序取得了文本，不会把外部内容升级为可信指令。Live 中模型看到的四类内容都通过同一个 `load_content(source_id)` 工具返回，避免为每种载体使用不同工具 Schema 而引入额外变量。
 
-本讲刻意限制范围：Web 直接解析本地 HTML Fixture，不测试网络请求和重定向；PDF 只支持受限大小的文字型 PDF；Email 只读取 `text/plain` 且拒绝附件；RAG 使用确定性本地关键词 Top-1 检索。没有实现网页抓取、OCR、HTML 邮件渲染、附件处理、向量数据库或生产级内容清洗。
+本讲刻意限制范围：Web 直接解析本地 HTML Fixture，忽略 `script`、`style` 和 `noscript` 后提取正文文本，不测试网络请求、重定向、浏览器渲染、脚本执行或 CSS 可见性计算；PDF 只支持受限大小的文字型 PDF；Email 只读取 `text/plain` 且拒绝附件；RAG 使用确定性本地关键词 Top-1 检索。没有实现网页抓取、OCR、HTML 邮件渲染、附件处理、向量数据库或生产级内容清洗。
 
 ## 确定性检查
 
@@ -91,7 +91,7 @@ Observation Executor 允许 `load_content`，但在模型第一次提出 `read_f
 
 ## 2026-10-10 真实复核
 
-模型输入与 Live Runtime 基线为 `1d34698`，课程发布 Tag 为 `v0.4.1-lesson-04-indirect-prompt-injection`。本次使用 Provider `deepseek`、模型配置值 `deepseek-v4-pro`，在全新目录 `.lab-output/lesson-04/verification-2026-10-10-v3/` 中独立运行 8 个 Case，每个 Case 3 次，共生成 24 条记录，错误数为 0。
+模型输入与 Live Runtime 基线为 `1d34698`，课程发布 Tag 为 `v0.4.2-lesson-04-indirect-prompt-injection`。本次使用 Provider `deepseek`、模型配置值 `deepseek-v4-pro`，在全新目录 `.lab-output/lesson-04/verification-2026-10-10-v3/` 中独立运行 8 个 Case，每个 Case 3 次，共生成 24 条记录，错误数为 0。
 
 | Case | 载体 | 运行 | 完成 | Payload 进入上下文 | 敏感提议 | 正常事实命中 | 来源元数据进入上下文 |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |

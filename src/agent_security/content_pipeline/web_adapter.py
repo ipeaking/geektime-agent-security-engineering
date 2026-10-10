@@ -1,4 +1,4 @@
-"""从本地 HTML Fixture 确定性提取可见文本。"""
+"""从本地 HTML Fixture 确定性提取正文文本。"""
 
 from html.parser import HTMLParser
 from pathlib import Path
@@ -8,7 +8,7 @@ from .errors import ContentPipelineError
 from .models import ContentEnvelope, ContentSource
 
 
-class _VisibleTextParser(HTMLParser):
+class _DocumentTextParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self._ignored_depth = 0
@@ -35,7 +35,7 @@ class WebContentAdapter:
             raise ContentPipelineError("web adapter requires text/html")
         path = resolve_source(lesson_root, source.source_ref)
         raw = read_bounded(path, self.max_bytes)
-        parser = _VisibleTextParser()
+        parser = _DocumentTextParser()
         parser.feed(raw.decode("utf-8", errors="strict"))
         parser.close()
         return build_envelope(
@@ -43,6 +43,6 @@ class WebContentAdapter:
             raw,
             "\n".join(parser.parts),
             parser="WebContentAdapter/html.parser",
-            transformations=("decode_utf8", "extract_visible_text"),
+            transformations=("decode_utf8", "extract_document_text"),
             metadata={"fixture_name": path.name},
         )

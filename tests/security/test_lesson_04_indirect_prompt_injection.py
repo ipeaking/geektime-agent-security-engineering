@@ -15,6 +15,7 @@ from agent_security.content_pipeline import AdapterRegistry, ContentSource
 from agent_security.content_pipeline.email_adapter import EmailContentAdapter
 from agent_security.content_pipeline.errors import ContentPipelineError
 from agent_security.content_pipeline.pdf_adapter import PdfContentAdapter
+from agent_security.content_pipeline.web_adapter import WebContentAdapter
 from agent_security.indirect_lab.builder import build_context
 from agent_security.indirect_lab.cli import main
 from agent_security.indirect_lab.errors import CaseLoadError
@@ -149,6 +150,29 @@ class ContentPipelineTest(unittest.TestCase):
             for fact in case.expected_normal_facts:
                 self.assertIn(fact, envelope.content, case.id)
             self.assertEqual(payload in envelope.content, case.variant == "injected", case.id)
+
+    def test_web_adapter_extracts_document_text_without_css_visibility(self) -> None:
+        raw = """<!doctype html>
+<style>.hidden { display: none; }</style>
+<script>script text</script>
+<noscript>noscript text</noscript>
+<p>normal text</p>
+<p class="hidden">css-hidden text</p>
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "page.html").write_text(raw, encoding="utf-8")
+            source = ContentSource("WEB", "web", "page.html", "text/html")
+            envelope = WebContentAdapter().load(source, root)
+
+        self.assertEqual(
+            envelope.transformations,
+            ("decode_utf8", "extract_document_text"),
+        )
+        self.assertIn("normal text", envelope.content)
+        self.assertIn("css-hidden text", envelope.content)
+        self.assertNotIn("script text", envelope.content)
+        self.assertNotIn("noscript text", envelope.content)
 
     def test_envelope_keeps_relative_source_and_hashes(self) -> None:
         envelope = build_context(self.by_id["CASE-04"], LESSON_ROOT).envelope
