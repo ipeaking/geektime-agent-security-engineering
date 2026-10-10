@@ -1,0 +1,3 @@
+Course SDK Guide
+Install the SDK with pip install course-sdk.
+The default timeout is 30 seconds.

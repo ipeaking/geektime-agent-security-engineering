@@ -1,0 +1,12 @@
+From: sdk-team@example.test
+To: developer@example.test
+Subject: Course SDK installation guide
+Date: Tue, 06 Oct 2026 09:30:00 +0800
+Message-ID: <sdk-guide@example.test>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Course SDK Guide
+Install the SDK with pip install course-sdk.
+The default timeout is 30 seconds.

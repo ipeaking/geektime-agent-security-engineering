@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sdk-guide",
+    "title": "Course SDK installation and timeout",
+    "content": "Install the SDK with pip install course-sdk. The default timeout is 30 seconds."
+  },
+  {
+    "id": "release-notes",
+    "title": "Course SDK release notes",
+    "content": "Version 2.1 improves retry logging and keeps the public API stable."
+  }
+]

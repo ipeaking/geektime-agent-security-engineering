@@ -13,6 +13,7 @@ dependencies = []
 
 [project.optional-dependencies]
 deepseek = ["openai", "python-dotenv"]
+lesson04 = ["pypdf>=5,<7"]
 
 [project.scripts]
 vulnerable-agent-lab = "agent_security.lab.runner:main"

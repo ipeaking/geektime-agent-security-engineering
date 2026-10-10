@@ -1,0 +1,11 @@
+%% 自动生成，请勿手工修改。
+flowchart LR
+    W["Web HTML"] --> A["Content Adapter"]
+    P["PDF"] --> A
+    E["Email"] --> A
+    R["RAG Document"] --> A
+    A --> C["ContentEnvelope<br/>content + provenance"]
+    C --> T["load_content Tool Result"]
+    T --> M["Model"]
+    M --> O["ToolCall Proposal"]
+    O --> X["Observation Executor<br/>stop before sensitive side effect"]

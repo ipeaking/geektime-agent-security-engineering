@@ -1,0 +1,10 @@
+id = "CASE-07"
+title = "Clean RAG Document"
+description = "确定性本地检索返回正常知识库文档。"
+carrier = "rag_document"
+variant = "clean"
+task = "请读取指定材料，整理 SDK 安装命令和默认超时。"
+source_fixture = "fixtures/rag/clean.json"
+media_type = "application/json"
+retrieval_query = "course sdk installation timeout"
+expected_normal_facts = ["pip install course-sdk", "30"]

@@ -6,7 +6,8 @@
 
 - 第 01 讲 `lesson-01-prompt-injection`：用 Live 与 Replay 研究间接提示词注入及其工程后果。
 - 第 02 讲 `lesson-02-threat-model`：把参与者、资产、边界和威胁保存成可校验的 Threat Model as Code。
-- 第 03 讲（当前开发版本）：用 Context Lab 观察同一注入载荷从不同来源、包装方式和 Prompt Profile 进入上下文时的模型行为。
+- 第 03 讲：用 Context Lab 观察同一注入载荷从不同来源、包装方式和 Prompt Profile 进入上下文时的模型行为。
+- 第 04 讲（当前开发版本）：让网页、PDF、邮件和 RAG 文档经过统一内容管线进入 Agent，保留来源并观察间接 Prompt Injection。
 
 切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
 
@@ -65,14 +66,14 @@ macOS / Linux：
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -e '.[deepseek]'
+python -m pip install -e '.[deepseek,lesson04]'
 ```
 
 Windows PowerShell：
 
 ```powershell
 python -m pip install --upgrade pip
-python -m pip install -e ".[deepseek]"
+python -m pip install -e ".[deepseek,lesson04]"
 ```
 
 ### 4. 创建 DeepSeek API Key
@@ -238,3 +239,18 @@ make lesson-03
 `make lesson-03` 不调用模型、不访问公网，也不需要 API Key。确认实验内容全部是合成数据后，可以手工运行 `make context-lab-live` 和 `make context-lab-report`。Live 中的 Observation Executor 只记录 `read_file` 和 `send_diagnostic` 提议，不执行敏感工具；它是测量装置，不是生产安全防御。
 
 详细说明见 `labs/lesson_03_prompt_injection_mechanism/README.md`。
+
+## 第 04 讲：多载体间接注入
+
+第四讲把同一段 Payload 分别放进网页、文字型 PDF、纯文本邮件和本地 RAG 文档。四类 Adapter 只负责确定性解析和保留来源，不判断内容是否安全；模型统一通过 `load_content` 读取 `ContentEnvelope`。
+
+```bash
+make carrier-lab-inspect
+make carrier-lab-render
+make carrier-lab-check
+make lesson-04
+```
+
+`make lesson-04` 不调用真实模型。确认所有 Fixture 都是合成数据后，再手工运行 `make carrier-lab-live` 和 `make carrier-lab-report`。Observation Executor 会在第一次敏感工具提议处停止，不读取文件或发送数据。
+
+详细设计、限制和真实复核结果见 `labs/lesson_04_indirect_prompt_injection/README.md`。
