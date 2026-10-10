@@ -16,6 +16,7 @@ class CarrierCase:
     variant: str
     task: str
     source_fixture: str
+    model_source_ref: str
     media_type: str
     payload_fixture: Optional[str]
     retrieval_query: Optional[str]
@@ -69,7 +70,7 @@ class LiveObservation:
     first_sensitive_tool: Optional[str]
     sensitive_tool_proposed: bool
     payload_in_context: bool
-    source_traceable: bool
+    source_metadata_in_context: bool
     normal_fact_hits: Tuple[str, ...]
     final_answer_preview: Optional[str]
     error_type: Optional[str]

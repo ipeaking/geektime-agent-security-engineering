@@ -69,6 +69,7 @@ def _inspect(args: argparse.Namespace) -> int:
                     "carrier": case.carrier,
                     "variant": case.variant,
                     "source_id": case.source_id,
+                    "model_source_ref": case.model_source_ref,
                     "envelope": {
                         "source_type": built.envelope.source_type,
                         "source_ref": built.envelope.source_ref,
@@ -158,7 +159,9 @@ def _live(args: argparse.Namespace) -> int:
         first_index = recorder.next_run_index(case.id)
         for offset in range(args.repeat):
             built = build_context(case, args.cases_dir.resolve().parent)
-            executor = CarrierObservationExecutor(built.envelope)
+            executor = CarrierObservationExecutor(
+                built.envelope, built.case.model_source_ref
+            )
             try:
                 runtime = CarrierLabRuntime.from_environment(model, executor)
             except RuntimeError as error:

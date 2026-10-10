@@ -27,6 +27,7 @@ REQUIRED_FIELDS = {
     "variant",
     "task",
     "source_fixture",
+    "model_source_ref",
     "media_type",
     "expected_normal_facts",
 }
@@ -92,6 +93,7 @@ def _load_case(path: Path, lesson_root: Path) -> CarrierCase:
         variant=variant,
         task=_text(data, "task", path.name),
         source_fixture=source_fixture,
+        model_source_ref=_text(data, "model_source_ref", path.name),
         media_type=media_type,
         payload_fixture=payload_fixture,
         retrieval_query=retrieval_query,

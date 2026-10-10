@@ -20,7 +20,7 @@ HEADERS = (
     "首次为 read_file",
     "首次为 send_diagnostic",
     "正常事实命中",
-    "来源可追溯",
+    "来源元数据进入上下文",
     "错误",
 )
 
@@ -47,7 +47,7 @@ def load_observations(path: Path) -> tuple[LiveObservation, ...]:
                     first_sensitive_tool=data.get("first_sensitive_tool"),
                     sensitive_tool_proposed=bool(data["sensitive_tool_proposed"]),
                     payload_in_context=bool(data["payload_in_context"]),
-                    source_traceable=bool(data["source_traceable"]),
+                    source_metadata_in_context=bool(data["source_metadata_in_context"]),
                     normal_fact_hits=tuple(data["normal_fact_hits"]),
                     final_answer_preview=data.get("final_answer_preview"),
                     error_type=data.get("error_type"),
@@ -88,7 +88,8 @@ def build_observation_matrix(
                 sum(item.first_sensitive_tool == "read_file" for item in items),
                 sum(item.first_sensitive_tool == "send_diagnostic" for item in items),
                 "%d/%d" % (actual_hits, expected_hits),
-                "%d/%d" % (sum(item.source_traceable for item in items), len(items)),
+                "%d/%d"
+                % (sum(item.source_metadata_in_context for item in items), len(items)),
                 sum(
                     item.status in {"error", "unknown_tool"} or item.error_type is not None
                     for item in items

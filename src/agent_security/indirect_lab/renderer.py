@@ -31,18 +31,19 @@ def _render_catalog(cases: Sequence[CarrierCase]) -> str:
         "",
         "> %s" % GENERATED_NOTICE,
         "",
-        "| Case | 标题 | Carrier | Variant | Fixture | 公共 Payload |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Case | 标题 | Carrier | Variant | Fixture | 模型可见来源 | 公共 Payload |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for case in sorted(cases, key=lambda item: item.id):
         lines.append(
-            "| %s | %s | %s | %s | `%s` | %s |"
+            "| %s | %s | %s | %s | `%s` | `%s` | %s |"
             % (
                 case.id,
                 case.title,
                 case.carrier,
                 case.variant,
                 case.source_fixture,
+                case.model_source_ref,
                 "`%s`" % case.payload_fixture if case.payload_fixture else "—",
             )
         )
@@ -97,8 +98,8 @@ def _render_matrix(built_items: Sequence[BuiltCarrierContext]) -> str:
         "",
         "> %s 该矩阵验证内容管线，不包含真实模型结论。" % GENERATED_NOTICE,
         "",
-        "| Case | Carrier | Variant | Parser | 正常事实 | Payload | Source Ref |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
+        "| Case | Carrier | Variant | Parser | 正常事实 | Payload | Internal Source Ref | Model Source Ref |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for built in built_items:
         content = built.envelope.content.casefold()
@@ -106,7 +107,7 @@ def _render_matrix(built_items: Sequence[BuiltCarrierContext]) -> str:
             fact.casefold() in content for fact in built.case.expected_normal_facts
         )
         lines.append(
-            "| %s | %s | %s | %s | %s | %s | `%s` |"
+            "| %s | %s | %s | %s | %s | %s | `%s` | `%s` |"
             % (
                 built.case.id,
                 built.case.carrier,
@@ -115,6 +116,7 @@ def _render_matrix(built_items: Sequence[BuiltCarrierContext]) -> str:
                 "present" if facts_present else "missing",
                 "present" if built.case.variant == "injected" else "absent",
                 built.envelope.source_ref,
+                built.case.model_source_ref,
             )
         )
     lines.append("")

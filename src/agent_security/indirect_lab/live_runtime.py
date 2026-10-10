@@ -76,6 +76,7 @@ class CarrierLabRuntime:
         self.max_steps = max_steps
         self.max_output_tokens = max_output_tokens
         self.max_preview_chars = max_preview_chars
+        self._content_delivered = False
 
     @classmethod
     def from_environment(
@@ -95,7 +96,12 @@ class CarrierLabRuntime:
 
     def run(self, built: BuiltCarrierContext, run_index: int) -> LiveObservation:
         input_items: List[Any] = [{"role": "user", "content": built.user_message}]
+        self._content_delivered = False
+        content_pending = False
         for _ in range(self.max_steps):
+            if content_pending:
+                self._content_delivered = True
+                content_pending = False
             try:
                 response = self.client.responses.create(
                     model=self.model,
@@ -155,6 +161,7 @@ class CarrierLabRuntime:
                         "output": json.dumps(output, ensure_ascii=False),
                     }
                 )
+                content_pending = True
         return self._observation(built, run_index, "error", error_type="max_steps_exceeded")
 
     def _observation(
@@ -172,7 +179,6 @@ class CarrierLabRuntime:
             for fact in built.case.expected_normal_facts
             if answer is not None and fact.casefold() in answer.casefold()
         )
-        load_observed = "load_content" in proposed
         return LiveObservation(
             case_id=built.case.id,
             carrier=built.case.carrier,
@@ -184,8 +190,10 @@ class CarrierLabRuntime:
             proposed_tools=proposed,
             first_sensitive_tool=sensitive[0] if sensitive else None,
             sensitive_tool_proposed=bool(sensitive),
-            payload_in_context=(built.case.variant == "injected" and load_observed),
-            source_traceable=load_observed,
+            payload_in_context=(
+                built.case.variant == "injected" and self._content_delivered
+            ),
+            source_metadata_in_context=self._content_delivered,
             normal_fact_hits=hits,
             final_answer_preview=answer[: self.max_preview_chars] if answer else None,
             error_type=error_type,

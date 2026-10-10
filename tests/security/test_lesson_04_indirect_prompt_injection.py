@@ -67,6 +67,7 @@ class CarrierCaseTest(unittest.TestCase):
             self.assertEqual(clean.retrieval_query, injected.retrieval_query)
             self.assertEqual(clean.expected_normal_facts, injected.expected_normal_facts)
             self.assertEqual(clean.source_id, injected.source_id)
+            self.assertEqual(clean.model_source_ref, injected.model_source_ref)
             self.assertNotEqual(clean.source_fixture, injected.source_fixture)
 
     def test_each_pair_builds_the_same_user_message(self) -> None:
@@ -113,6 +114,17 @@ class CarrierCaseTest(unittest.TestCase):
             path.write_text(text, encoding="utf-8")
             issues = validate_cases(load_cases(root / "cases"), root)
         self.assertIn("IL005", {issue.code for issue in issues})
+
+    def test_validator_rejects_variant_leak_in_model_source_ref(self) -> None:
+        with self._copy_lesson() as root:
+            path = root / "cases" / "02_injected_web.toml"
+            text = path.read_text(encoding="utf-8").replace(
+                'model_source_ref = "sdk-guide.html"',
+                'model_source_ref = "injected.html"',
+            )
+            path.write_text(text, encoding="utf-8")
+            issues = validate_cases(load_cases(root / "cases"), root)
+        self.assertIn("IL011", {issue.code for issue in issues})
 
     @contextlib.contextmanager
     def _copy_lesson(self):
@@ -212,6 +224,26 @@ secret
         self.assertEqual(content.source_ref, "fixtures/email/injected.eml")
         self.assertIn("EmailContentAdapter", content.parser)
 
+    def test_model_visible_outputs_do_not_leak_fixture_variant(self) -> None:
+        for case in self.cases:
+            built = build_context(case, LESSON_ROOT)
+            executor = CarrierObservationExecutor(
+                built.envelope, case.model_source_ref
+            )
+            decision = executor.observe(
+                ToolCall("load_content", {"source_id": case.source_id}, "test")
+            )
+            assert decision.result
+            visible_output = json.dumps(
+                decision.result.output, ensure_ascii=False
+            ).casefold()
+            self.assertEqual(
+                decision.result.output["source_ref"], case.model_source_ref
+            )
+            self.assertNotIn("fixture_name", decision.result.output["metadata"])
+            for hidden_marker in ("clean", "injected", "fixtures/"):
+                self.assertNotIn(hidden_marker, visible_output, case.id)
+
 
 class CarrierObservationTest(unittest.TestCase):
     @classmethod
@@ -220,24 +252,34 @@ class CarrierObservationTest(unittest.TestCase):
         cls.built = build_context(cls.case, LESSON_ROOT)
 
     def test_load_content_returns_envelope_and_source(self) -> None:
-        executor = CarrierObservationExecutor(self.built.envelope)
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
         decision = executor.observe(
             ToolCall("load_content", {"source_id": self.case.source_id}, "test")
         )
         self.assertFalse(decision.stop)
         assert decision.result
         self.assertTrue(decision.result.success)
-        self.assertEqual(decision.result.output["source_ref"], self.case.source_fixture)
+        self.assertEqual(decision.result.output["source_ref"], "sdk-guide.html")
+        self.assertNotIn("fixture_name", decision.result.output["metadata"])
         self.assertIn("demo-config.json", decision.result.output["content"])
+        visible_output = json.dumps(decision.result.output, ensure_ascii=False).casefold()
+        for hidden_marker in ("clean", "injected", "fixtures/"):
+            self.assertNotIn(hidden_marker, visible_output)
 
     def test_wrong_source_id_stops_before_content(self) -> None:
-        executor = CarrierObservationExecutor(self.built.envelope)
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
         decision = executor.observe(ToolCall("load_content", {"source_id": "OTHER"}, "test"))
         self.assertTrue(decision.stop)
         self.assertEqual(decision.status, "error")
 
     def test_sensitive_tool_is_recorded_but_not_executed(self) -> None:
-        executor = CarrierObservationExecutor(self.built.envelope)
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
         decision = executor.observe(
             ToolCall("read_file", {"path": "demo-config.json"}, "test")
         )
@@ -265,13 +307,35 @@ class CarrierObservationTest(unittest.TestCase):
             ]
         )
         client = SimpleNamespace(responses=SimpleNamespace(create=create))
-        executor = CarrierObservationExecutor(self.built.envelope)
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
         observation = CarrierLabRuntime(client, "test-model", executor).run(self.built, 1)
         self.assertEqual(observation.status, "sensitive_tool_proposed")
         self.assertEqual(observation.proposed_tools, ("load_content", "read_file"))
         self.assertTrue(observation.payload_in_context)
-        self.assertTrue(observation.source_traceable)
+        self.assertTrue(observation.source_metadata_in_context)
         self.assertEqual(create.call_count, 2)
+
+    def test_wrong_source_id_does_not_claim_metadata_entered_context(self) -> None:
+        wrong_load = SimpleNamespace(
+            type="function_call",
+            name="load_content",
+            arguments=json.dumps({"source_id": "OTHER"}),
+            call_id="call-wrong",
+        )
+        client = SimpleNamespace(
+            responses=SimpleNamespace(
+                create=Mock(return_value=SimpleNamespace(output=[wrong_load], output_text=""))
+            )
+        )
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
+        observation = CarrierLabRuntime(client, "test-model", executor).run(self.built, 1)
+        self.assertEqual(observation.status, "error")
+        self.assertFalse(observation.payload_in_context)
+        self.assertFalse(observation.source_metadata_in_context)
 
     def test_runtime_disables_storage_and_parallel_tools(self) -> None:
         response = SimpleNamespace(
@@ -279,7 +343,9 @@ class CarrierObservationTest(unittest.TestCase):
         )
         create = Mock(return_value=response)
         client = SimpleNamespace(responses=SimpleNamespace(create=create))
-        executor = CarrierObservationExecutor(self.built.envelope)
+        executor = CarrierObservationExecutor(
+            self.built.envelope, self.case.model_source_ref
+        )
         observation = CarrierLabRuntime(client, "test-model", executor).run(self.built, 1)
         kwargs = create.call_args.kwargs
         self.assertFalse(kwargs["store"])
@@ -343,7 +409,7 @@ class CarrierOutputTest(unittest.TestCase):
                 first_sensitive_tool="read_file",
                 sensitive_tool_proposed=True,
                 payload_in_context=True,
-                source_traceable=True,
+                source_metadata_in_context=True,
                 normal_fact_hits=(),
                 final_answer_preview=None,
                 error_type=None,
@@ -360,7 +426,7 @@ class CarrierOutputTest(unittest.TestCase):
                 first_sensitive_tool=None,
                 sensitive_tool_proposed=False,
                 payload_in_context=True,
-                source_traceable=True,
+                source_metadata_in_context=True,
                 normal_fact_hits=("pip install course-sdk", "30"),
                 final_answer_preview="normal",
                 error_type=None,
@@ -375,5 +441,7 @@ class CarrierOutputTest(unittest.TestCase):
             "| CASE-02 | web | 2 | 1 | 2/2 | 1 | 1 | 0 | 2/4 | 2/2 | 0 |",
             markdown,
         )
+        self.assertIn("来源元数据进入上下文", markdown)
+        self.assertNotIn("来源可追溯", markdown)
         self.assertIn("CASE-02,web,2,1,2/2,1,1,0,2/4,2/2,0", csv_text)
         model_factory.assert_not_called()

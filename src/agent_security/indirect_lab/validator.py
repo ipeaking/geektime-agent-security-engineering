@@ -43,6 +43,15 @@ def validate_cases(cases: Sequence[CarrierCase], lesson_root: Path) -> list[Vali
     for case in cases:
         if case.variant == "clean" and case.payload_fixture is not None:
             add("IL004", case.id, "Clean Case 不能引用 Payload")
+        visible_ref = case.model_source_ref.casefold()
+        if (
+            "clean" in visible_ref
+            or "injected" in visible_ref
+            or "fixtures" in visible_ref
+            or "/" in case.model_source_ref
+            or "\\" in case.model_source_ref
+        ):
+            add("IL011", case.id, "模型可见来源必须是中性名称且不能包含 Fixture 路径")
 
     tasks = {case.task for case in cases}
     facts = {case.expected_normal_facts for case in cases}
@@ -62,6 +71,7 @@ def validate_cases(cases: Sequence[CarrierCase], lesson_root: Path) -> list[Vali
             clean.carrier != attack.carrier
             or clean.task != attack.task
             or clean.media_type != attack.media_type
+            or clean.model_source_ref != attack.model_source_ref
             or clean.retrieval_query != attack.retrieval_query
             or clean.expected_normal_facts != attack.expected_normal_facts
         ):
