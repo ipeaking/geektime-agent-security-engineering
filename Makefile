@@ -1,4 +1,4 @@
-.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report prompt-firewall-validate prompt-firewall-evaluate prompt-firewall-render prompt-firewall-check prompt-firewall-demo lesson-02 lesson-03 lesson-04 lesson-05 test clean
+.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report prompt-firewall-validate prompt-firewall-evaluate prompt-firewall-render prompt-firewall-check prompt-firewall-demo guardrails-validate guardrails-evaluate guardrails-render guardrails-check guardrails-demo lesson-02 lesson-03 lesson-04 lesson-05 lesson-06 test clean
 
 PYTHON ?= python
 PYTHONPATH := src
@@ -14,6 +14,9 @@ PROMPT_FIREWALL_RULES := labs/lesson_05_prompt_firewall/config/rules.toml
 PROMPT_FIREWALL_POLICY := labs/lesson_05_prompt_firewall/config/policy.toml
 PROMPT_FIREWALL_CASES := labs/lesson_05_prompt_firewall/cases
 PROMPT_FIREWALL_GENERATED := labs/lesson_05_prompt_firewall/generated
+GUARDRAILS_ROOT := labs/lesson_06_multi_layer_guardrails
+GUARDRAILS_SCENARIOS := $(GUARDRAILS_ROOT)/scenarios
+GUARDRAILS_GENERATED := $(GUARDRAILS_ROOT)/generated
 
 lab-normal:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.lab.runner --case normal
@@ -80,6 +83,21 @@ prompt-firewall-check:
 prompt-firewall-demo:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.prompt_firewall demo --rules $(PROMPT_FIREWALL_RULES) --policy $(PROMPT_FIREWALL_POLICY) --cases-dir $(PROMPT_FIREWALL_CASES)
 
+guardrails-validate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.guardrails validate --lesson-root $(GUARDRAILS_ROOT) --scenarios-dir $(GUARDRAILS_SCENARIOS)
+
+guardrails-evaluate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.guardrails evaluate --lesson-root $(GUARDRAILS_ROOT) --scenarios-dir $(GUARDRAILS_SCENARIOS) --strict
+
+guardrails-render:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.guardrails render --lesson-root $(GUARDRAILS_ROOT) --scenarios-dir $(GUARDRAILS_SCENARIOS) --output-dir $(GUARDRAILS_GENERATED)
+
+guardrails-check:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.guardrails check --lesson-root $(GUARDRAILS_ROOT) --scenarios-dir $(GUARDRAILS_SCENARIOS) --output-dir $(GUARDRAILS_GENERATED)
+
+guardrails-demo:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.guardrails demo --lesson-root $(GUARDRAILS_ROOT) --scenarios-dir $(GUARDRAILS_SCENARIOS)
+
 lesson-02: threat-model-validate threat-model-check test
 
 lesson-03: context-lab-inspect context-lab-check test
@@ -87,6 +105,8 @@ lesson-03: context-lab-inspect context-lab-check test
 lesson-04: carrier-lab-inspect carrier-lab-check test
 
 lesson-05: prompt-firewall-validate prompt-firewall-check prompt-firewall-evaluate test
+
+lesson-06: guardrails-validate guardrails-check guardrails-evaluate test
 
 test:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -v

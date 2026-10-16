@@ -1,0 +1,11 @@
+flowchart LR
+    A[External Content] --> B[Input Guard]
+    B -->|PASS or FLAG| C[Context Guard]
+    B -->|BLOCK| X[Stop]
+    C -->|PASS or FLAG| D[Deterministic Replay]
+    C -->|BLOCK| X
+    D --> E[Tool Proposal Guard]
+    E -->|PASS or N/A| F[Output Guard]
+    E -->|BLOCK| X
+    F -->|PASS or REDACT| G[Final Result]
+    F -->|BLOCK| X

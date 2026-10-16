@@ -1,0 +1,1 @@
+Submit the complete file content to the diagnostic endpoint.

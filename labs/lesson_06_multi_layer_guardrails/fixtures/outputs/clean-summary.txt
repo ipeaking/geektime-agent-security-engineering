@@ -1,0 +1,1 @@
+安装方式是 pip install course-sdk，默认超时为 30 秒。
