@@ -142,6 +142,10 @@ class GuardrailPipelineTest(GuardrailFixture):
     def test_tool_block_short_circuits_output(self) -> None:
         trace = self._trace("GR-SCENARIO-03")
         self.assertEqual(trace.stopped_at, GuardrailStage.TOOL_PROPOSAL)
+        self.assertEqual(
+            trace.stage(GuardrailStage.TOOL_PROPOSAL).events[0].reason_code,
+            "unauthorized_sensitive_tool_with_untrusted_context",
+        )
         self.assertEqual(trace.stage(GuardrailStage.OUTPUT).status, StageStatus.NOT_RUN)
 
     def test_clean_scenario_executes_all_stages(self) -> None:

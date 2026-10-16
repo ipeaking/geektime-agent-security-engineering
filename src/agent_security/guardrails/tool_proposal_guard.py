@@ -31,7 +31,10 @@ class ToolProposalGuard:
             return self._block("outbound_action_not_authorized", details)
         if tool_name not in contract.allowed_tools:
             if tool_name in self.sensitive_tools and any(item.trust == "untrusted" for item in segments):
-                return self._block("untrusted_content_drove_sensitive_tool", details)
+                return self._block(
+                    "unauthorized_sensitive_tool_with_untrusted_context",
+                    details,
+                )
             reason = "tool_not_required_by_task" if tool_name == "read_file" else "tool_not_allowed_by_task"
             return self._block(reason, details)
         return GuardrailEvent(

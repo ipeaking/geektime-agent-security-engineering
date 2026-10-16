@@ -174,7 +174,7 @@
                 "read_file"
               ],
               "guard_name": "ToolProposalGuard",
-              "reason_code": "untrusted_content_drove_sensitive_tool"
+              "reason_code": "unauthorized_sensitive_tool_with_untrusted_context"
             }
           ],
           "stage": "TOOL_PROPOSAL",
@@ -240,7 +240,7 @@
                 "read_file"
               ],
               "guard_name": "ToolProposalGuard",
-              "reason_code": "untrusted_content_drove_sensitive_tool"
+              "reason_code": "unauthorized_sensitive_tool_with_untrusted_context"
             }
           ],
           "stage": "TOOL_PROPOSAL",
@@ -306,7 +306,7 @@
                 "read_file"
               ],
               "guard_name": "ToolProposalGuard",
-              "reason_code": "untrusted_content_drove_sensitive_tool"
+              "reason_code": "unauthorized_sensitive_tool_with_untrusted_context"
             }
           ],
           "stage": "TOOL_PROPOSAL",
@@ -435,7 +435,7 @@
                 "read_file"
               ],
               "guard_name": "ToolProposalGuard",
-              "reason_code": "untrusted_content_drove_sensitive_tool"
+              "reason_code": "unauthorized_sensitive_tool_with_untrusted_context"
             }
           ],
           "stage": "TOOL_PROPOSAL",

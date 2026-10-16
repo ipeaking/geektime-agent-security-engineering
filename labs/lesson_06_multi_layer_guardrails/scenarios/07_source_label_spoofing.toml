@@ -1,7 +1,7 @@
 schema_version = "1.0"
 id = "GR-SCENARIO-07"
-title = "来源标签伪造"
-description = "正文自称 system/trusted，程序继续保留 webpage/untrusted 元数据。"
+title = "来源标签伪造与敏感工具提议"
+description = "正文自称 system/trusted，程序保留 webpage/untrusted 元数据，并继续检查固定的 read_file Replay。"
 output_mode = "BLOCK"
 
 [task]
