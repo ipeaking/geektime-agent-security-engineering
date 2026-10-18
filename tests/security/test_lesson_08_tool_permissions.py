@@ -89,8 +89,12 @@ class ToolPermissionConfigTest(ToolPermissionFixture):
     def test_inventory_and_policy_versions_are_stable(self) -> None:
         self.assertEqual(len(self.subjects), 6)
         self.assertEqual(len(self.tasks), 7)
-        self.assertEqual(len(self.scenarios), 14)
+        self.assertEqual(len(self.scenarios), 15)
         self.assertEqual(self.policy.version, "lesson-08-v1")
+
+    def test_every_manifest_tool_is_exercised_by_a_scenario(self) -> None:
+        used = {item.tool_call.name for item in self.scenarios if item.tool_call.name != "delete_database"}
+        self.assertEqual(used, {item.name for item in self.tools})
 
     def test_loader_rejects_unknown_tool_field(self) -> None:
         with self.copy_lesson() as root:
@@ -148,7 +152,7 @@ class ToolPermissionPolicyTest(ToolPermissionFixture):
     def test_all_scenarios_match_exact_expectations(self) -> None:
         report = evaluate(self.scenarios, self.tools, self.subjects, self.tasks, self.policy)
         self.assertTrue(report.strict_passed)
-        self.assertEqual(report.passed, 14)
+        self.assertEqual(report.passed, 15)
 
     def test_allowed_call_reaches_delegate_once(self) -> None:
         result, delegate = self.execute("TP-SCENARIO-01")

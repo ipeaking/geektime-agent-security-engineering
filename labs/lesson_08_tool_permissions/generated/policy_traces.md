@@ -153,3 +153,14 @@
 - Decision: `DENY`
 - Delegated: `no`
 - Expected result: `matched`
+
+## TP-SCENARIO-15
+
+- `request_valid`: `SATISFIED` (`check_satisfied`)
+- `tool_registered`: `SATISFIED` (`check_satisfied`)
+- `subject_role_allowed`: `SATISFIED` (`check_satisfied`)
+- `tool_allowed_by_task`: `SATISFIED` (`check_satisfied`)
+- `capabilities_allowed_by_task`: `SATISFIED` (`check_satisfied`)
+- Decision: `ALLOW`
+- Delegated: `yes`
+- Expected result: `matched`

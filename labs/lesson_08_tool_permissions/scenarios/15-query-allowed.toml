@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-15"
+title = "Reader 在数据查询任务中调用 query_db"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-DATA-QUERY"
+
+[tool_call]
+name = "query_db"
+arguments = { query_id = "customer_summary" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

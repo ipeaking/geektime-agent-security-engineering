@@ -517,14 +517,51 @@
       "subject_id": "SUBJECT-READER",
       "task_id": "TASK-READ-DOCUMENT",
       "tool_name": "read_file"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-15",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-DATA-QUERY",
+      "tool_name": "query_db"
     }
   ],
   "summary": {
     "external_model_calls": 0,
     "network_calls": 0,
-    "passed": 14,
+    "passed": 15,
     "real_tool_side_effects": 0,
     "strict_passed": true,
-    "total": 14
+    "total": 15
   }
 }

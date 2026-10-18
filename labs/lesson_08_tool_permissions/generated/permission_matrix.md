@@ -16,5 +16,6 @@
 | TP-SCENARIO-12 | SUBJECT-OPERATOR | TASK-USER-ADMIN | manage_users | DENY | subject_role_not_allowed | no |
 | TP-SCENARIO-13 | SUBJECT-OPERATOR | TASK-MAINTENANCE | delete_database | DENY | tool_not_registered | no |
 | TP-SCENARIO-14 | SUBJECT-READER | TASK-READ-DOCUMENT | read_file | DENY | argument_type_mismatch | no |
+| TP-SCENARIO-15 | SUBJECT-READER | TASK-DATA-QUERY | query_db | ALLOW | all_required_checks_satisfied | yes |
 
-通过：14/14。
+通过：15/15。
