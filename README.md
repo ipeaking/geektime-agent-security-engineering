@@ -10,7 +10,8 @@
 - 第 04 讲：让网页、PDF、邮件和 RAG 文档经过统一内容管线进入 Agent，保留来源并观察间接 Prompt Injection。
 - 第 05 讲：在 `ContentEnvelope` 进入模型前执行确定性风险扫描和内容准入决策。
 - 第 06 讲：用 Input、Context、Tool Proposal 与 Output 四层 Guardrail 演示纵深防御。
-- 第 07 讲（当前开发版本）：让五类合成工具产生可观测效果，对比“模型说错话”和“Agent 做错事”。
+- 第 07 讲：让五类合成工具产生可观测效果，对比“模型说错话”和“Agent 做错事”。
+- 第 08 讲（当前开发版本）：为 Tool 标注六类 Permission，并在调用前执行默认拒绝的策略检查。
 
 切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
 
@@ -229,6 +230,21 @@ make lesson-07
 ```
 
 这一讲故意不实现 Tool Permission。确定性 Replay 用来回答：一旦错误内容变成 ToolCall，哪些读、写、外发、查询和命令效果会真实出现在执行轨迹里。详细说明见 `labs/lesson_07_tool_risk/README.md`。
+
+## 第 08 讲：Tool Permission System
+
+第八讲给七个教学工具标注 `READ`、`WRITE`、`EXECUTE`、`NETWORK`、`PAYMENT` 和 `ADMIN` 六类能力。候选 ToolCall 必须连同程序持有的 Subject 与 TaskContract 进入受策略保护的 Executor；只有 `ALLOW` 会调用下层 Recording Delegate。
+
+```bash
+make tool-permission-validate
+make tool-permission-render
+make tool-permission-check
+make tool-permission-evaluate
+make tool-permission-demo
+make lesson-08
+```
+
+本讲只建立工具级权限边界，不提前实现资源实例 Scope、目的地细分或人工审批。详细说明见 `labs/lesson_08_tool_permissions/README.md`。
 
 ## 第 02 讲：威胁模型
 

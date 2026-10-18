@@ -1,0 +1,57 @@
+schema_version = "1.0"
+
+[[tools]]
+name = "read_file"
+description = "读取文件"
+capabilities = ["READ"]
+required_arguments = ["path"]
+optional_arguments = []
+argument_types = { path = "string" }
+
+[[tools]]
+name = "write_file"
+description = "写入文件"
+capabilities = ["WRITE"]
+required_arguments = ["path", "content"]
+optional_arguments = []
+argument_types = { path = "string", content = "string" }
+
+[[tools]]
+name = "send_email"
+description = "发送邮件"
+capabilities = ["WRITE", "NETWORK"]
+required_arguments = ["to", "subject", "body"]
+optional_arguments = []
+argument_types = { to = "string", subject = "string", body = "string" }
+
+[[tools]]
+name = "query_db"
+description = "查询数据库"
+capabilities = ["READ"]
+required_arguments = ["query_id"]
+optional_arguments = []
+argument_types = { query_id = "string" }
+
+[[tools]]
+name = "run_shell"
+description = "执行受控命令"
+capabilities = ["EXECUTE"]
+required_arguments = ["command"]
+optional_arguments = []
+argument_types = { command = "string" }
+
+[[tools]]
+name = "charge_payment"
+description = "发起合成付款"
+capabilities = ["PAYMENT", "NETWORK"]
+required_arguments = ["amount", "currency"]
+optional_arguments = ["memo"]
+argument_types = { amount = "integer", currency = "string", memo = "string" }
+
+[[tools]]
+name = "manage_users"
+description = "执行合成用户管理动作"
+capabilities = ["ADMIN", "WRITE"]
+required_arguments = ["user_id", "action"]
+optional_arguments = []
+argument_types = { user_id = "string", action = "string" }

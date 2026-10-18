@@ -1,0 +1,530 @@
+{
+  "scenarios": [
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-01",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-READ-DOCUMENT",
+      "tool_name": "read_file"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "tool_not_allowed_by_task",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "tool_not_allowed_by_task",
+      "scenario_id": "TP-SCENARIO-02",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-READ-DOCUMENT",
+      "tool_name": "write_file"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "subject_role_not_allowed",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "subject_role_not_allowed",
+      "scenario_id": "TP-SCENARIO-03",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-EDIT-DOCUMENT",
+      "tool_name": "write_file"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-04",
+      "subject_id": "SUBJECT-EDITOR",
+      "task_id": "TASK-EDIT-DOCUMENT",
+      "tool_name": "write_file"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-05",
+      "subject_id": "SUBJECT-COMMUNICATOR",
+      "task_id": "TASK-SEND-UPDATE",
+      "tool_name": "send_email"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "subject_role_not_allowed",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "subject_role_not_allowed",
+      "scenario_id": "TP-SCENARIO-06",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-SEND-UPDATE",
+      "tool_name": "send_email"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-07",
+      "subject_id": "SUBJECT-OPERATOR",
+      "task_id": "TASK-MAINTENANCE",
+      "tool_name": "run_shell"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "tool_not_allowed_by_task",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "tool_not_allowed_by_task",
+      "scenario_id": "TP-SCENARIO-08",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-READ-DOCUMENT",
+      "tool_name": "run_shell"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-09",
+      "subject_id": "SUBJECT-BILLING",
+      "task_id": "TASK-BILLING",
+      "tool_name": "charge_payment"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "tool_not_allowed_by_task",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "tool_not_allowed_by_task",
+      "scenario_id": "TP-SCENARIO-10",
+      "subject_id": "SUBJECT-COMMUNICATOR",
+      "task_id": "TASK-SEND-UPDATE",
+      "tool_name": "charge_payment"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        }
+      ],
+      "decision": "ALLOW",
+      "delegated": true,
+      "passed": true,
+      "reason": "all_required_checks_satisfied",
+      "scenario_id": "TP-SCENARIO-11",
+      "subject_id": "SUBJECT-ADMIN",
+      "task_id": "TASK-USER-ADMIN",
+      "tool_name": "manage_users"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "subject_role_not_allowed",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "subject_role_not_allowed",
+      "scenario_id": "TP-SCENARIO-12",
+      "subject_id": "SUBJECT-OPERATOR",
+      "task_id": "TASK-USER-ADMIN",
+      "tool_name": "manage_users"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "check_satisfied",
+          "status": "SATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "tool_not_registered",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "tool_not_registered",
+      "scenario_id": "TP-SCENARIO-13",
+      "subject_id": "SUBJECT-OPERATOR",
+      "task_id": "TASK-MAINTENANCE",
+      "tool_name": "delete_database"
+    },
+    {
+      "checks": [
+        {
+          "name": "request_valid",
+          "reason": "argument_type_mismatch",
+          "status": "UNSATISFIED"
+        },
+        {
+          "name": "tool_registered",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "subject_role_allowed",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "tool_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "capabilities_allowed_by_task",
+          "reason": "earlier_check_denied",
+          "status": "NOT_RUN"
+        }
+      ],
+      "decision": "DENY",
+      "delegated": false,
+      "passed": true,
+      "reason": "argument_type_mismatch",
+      "scenario_id": "TP-SCENARIO-14",
+      "subject_id": "SUBJECT-READER",
+      "task_id": "TASK-READ-DOCUMENT",
+      "tool_name": "read_file"
+    }
+  ],
+  "summary": {
+    "external_model_calls": 0,
+    "network_calls": 0,
+    "passed": 14,
+    "real_tool_side_effects": 0,
+    "strict_passed": true,
+    "total": 14
+  }
+}

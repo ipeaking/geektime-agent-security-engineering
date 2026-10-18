@@ -1,0 +1,8 @@
+flowchart LR
+    A[Candidate ToolCall] --> B[PolicyEnforcedToolExecutor]
+    C[Trusted Subject] --> B
+    D[Task Contract] --> B
+    B --> E[Build Immutable Request]
+    E --> F[Tool Permission Policy]
+    F -->|ALLOW| G[Recording Delegate]
+    F -->|DENY| H[Stop]

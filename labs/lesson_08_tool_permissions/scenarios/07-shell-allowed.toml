@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-07"
+title = "Operator 在维护任务中调用 run_shell"
+subject_id = "SUBJECT-OPERATOR"
+task_id = "TASK-MAINTENANCE"
+
+[tool_call]
+name = "run_shell"
+arguments = { command = "package-inventory" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

@@ -1,0 +1,31 @@
+schema_version = "1.0"
+
+[[subjects]]
+id = "SUBJECT-READER"
+display_name = "Reader"
+roles = ["reader"]
+
+[[subjects]]
+id = "SUBJECT-EDITOR"
+display_name = "Editor"
+roles = ["editor"]
+
+[[subjects]]
+id = "SUBJECT-COMMUNICATOR"
+display_name = "Communicator"
+roles = ["communicator"]
+
+[[subjects]]
+id = "SUBJECT-OPERATOR"
+display_name = "Operator"
+roles = ["operator"]
+
+[[subjects]]
+id = "SUBJECT-BILLING"
+display_name = "Billing Operator"
+roles = ["billing_operator"]
+
+[[subjects]]
+id = "SUBJECT-ADMIN"
+display_name = "Administrator"
+roles = ["administrator"]

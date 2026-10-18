@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-06"
+title = "Reader 不能承担通知任务"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-SEND-UPDATE"
+
+[tool_call]
+name = "send_email"
+arguments = { to = "team@example.invalid", subject = "update", body = "done" }
+
+[expected]
+outcome = "DENY"
+reason = "subject_role_not_allowed"
+delegated = false

@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-12"
+title = "Operator 不能承担用户管理任务"
+subject_id = "SUBJECT-OPERATOR"
+task_id = "TASK-USER-ADMIN"
+
+[tool_call]
+name = "manage_users"
+arguments = { user_id = "USER-001", action = "suspend" }
+
+[expected]
+outcome = "DENY"
+reason = "subject_role_not_allowed"
+delegated = false

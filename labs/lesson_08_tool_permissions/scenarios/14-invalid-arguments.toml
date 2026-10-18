@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-14"
+title = "参数类型错误时默认拒绝"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-READ-DOCUMENT"
+
+[tool_call]
+name = "read_file"
+arguments = { path = 42 }
+
+[expected]
+outcome = "DENY"
+reason = "argument_type_mismatch"
+delegated = false

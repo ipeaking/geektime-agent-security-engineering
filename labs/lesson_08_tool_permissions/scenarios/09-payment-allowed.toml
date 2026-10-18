@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-09"
+title = "Billing Operator 在付款任务中调用 charge_payment"
+subject_id = "SUBJECT-BILLING"
+task_id = "TASK-BILLING"
+
+[tool_call]
+name = "charge_payment"
+arguments = { amount = 100, currency = "CNY", memo = "course fixture" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

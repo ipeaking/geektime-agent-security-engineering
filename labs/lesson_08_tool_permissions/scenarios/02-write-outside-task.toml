@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-02"
+title = "Reader 在读取任务中提出 write_file"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-READ-DOCUMENT"
+
+[tool_call]
+name = "write_file"
+arguments = { path = "guide.txt", content = "changed" }
+
+[expected]
+outcome = "DENY"
+reason = "tool_not_allowed_by_task"
+delegated = false

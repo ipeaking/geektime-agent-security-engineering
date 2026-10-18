@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-13"
+title = "未注册工具默认拒绝"
+subject_id = "SUBJECT-OPERATOR"
+task_id = "TASK-MAINTENANCE"
+
+[tool_call]
+name = "delete_database"
+arguments = { database = "primary" }
+
+[expected]
+outcome = "DENY"
+reason = "tool_not_registered"
+delegated = false

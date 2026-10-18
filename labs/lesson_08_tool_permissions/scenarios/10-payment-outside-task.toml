@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-10"
+title = "Communicator 在通知任务中提出 charge_payment"
+subject_id = "SUBJECT-COMMUNICATOR"
+task_id = "TASK-SEND-UPDATE"
+
+[tool_call]
+name = "charge_payment"
+arguments = { amount = 100, currency = "CNY" }
+
+[expected]
+outcome = "DENY"
+reason = "tool_not_allowed_by_task"
+delegated = false

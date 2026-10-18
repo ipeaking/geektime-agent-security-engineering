@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-05"
+title = "Communicator 在通知任务中发送邮件"
+subject_id = "SUBJECT-COMMUNICATOR"
+task_id = "TASK-SEND-UPDATE"
+
+[tool_call]
+name = "send_email"
+arguments = { to = "team@example.invalid", subject = "update", body = "done" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

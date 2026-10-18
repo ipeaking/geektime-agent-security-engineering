@@ -1,4 +1,4 @@
-.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report prompt-firewall-validate prompt-firewall-evaluate prompt-firewall-render prompt-firewall-check prompt-firewall-demo guardrails-validate guardrails-evaluate guardrails-render guardrails-check guardrails-demo tool-risk-validate tool-risk-evaluate tool-risk-render tool-risk-check tool-risk-demo lesson-02 lesson-03 lesson-04 lesson-05 lesson-06 lesson-07 test clean
+.PHONY: lab-normal lab-attack lab-attack-replay lab-attack-live threat-model-validate threat-model-render threat-model-check context-lab-inspect context-lab-render context-lab-check context-lab-live context-lab-report carrier-lab-inspect carrier-lab-render carrier-lab-check carrier-lab-live carrier-lab-report prompt-firewall-validate prompt-firewall-evaluate prompt-firewall-render prompt-firewall-check prompt-firewall-demo guardrails-validate guardrails-evaluate guardrails-render guardrails-check guardrails-demo tool-risk-validate tool-risk-evaluate tool-risk-render tool-risk-check tool-risk-demo tool-permission-validate tool-permission-evaluate tool-permission-render tool-permission-check tool-permission-demo lesson-02 lesson-03 lesson-04 lesson-05 lesson-06 lesson-07 lesson-08 test clean
 
 PYTHON ?= python
 PYTHONPATH := src
@@ -21,6 +21,10 @@ TOOL_RISK_ROOT := labs/lesson_07_tool_risk
 TOOL_RISK_TOOLS := $(TOOL_RISK_ROOT)/config/tools.toml
 TOOL_RISK_SCENARIOS := $(TOOL_RISK_ROOT)/scenarios
 TOOL_RISK_GENERATED := $(TOOL_RISK_ROOT)/generated
+TOOL_PERMISSION_ROOT := labs/lesson_08_tool_permissions
+TOOL_PERMISSION_CONFIG := $(TOOL_PERMISSION_ROOT)/config
+TOOL_PERMISSION_SCENARIOS := $(TOOL_PERMISSION_ROOT)/scenarios
+TOOL_PERMISSION_GENERATED := $(TOOL_PERMISSION_ROOT)/generated
 
 lab-normal:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.lab.runner --case normal
@@ -117,6 +121,21 @@ tool-risk-check:
 tool-risk-demo:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_risk demo --lesson-root $(TOOL_RISK_ROOT) --tools $(TOOL_RISK_TOOLS) --scenarios-dir $(TOOL_RISK_SCENARIOS)
 
+tool-permission-validate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_permissions validate --config-dir $(TOOL_PERMISSION_CONFIG) --scenarios-dir $(TOOL_PERMISSION_SCENARIOS)
+
+tool-permission-evaluate:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_permissions evaluate --config-dir $(TOOL_PERMISSION_CONFIG) --scenarios-dir $(TOOL_PERMISSION_SCENARIOS) --strict
+
+tool-permission-render:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_permissions render --config-dir $(TOOL_PERMISSION_CONFIG) --scenarios-dir $(TOOL_PERMISSION_SCENARIOS) --output-dir $(TOOL_PERMISSION_GENERATED)
+
+tool-permission-check:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_permissions check --config-dir $(TOOL_PERMISSION_CONFIG) --scenarios-dir $(TOOL_PERMISSION_SCENARIOS) --output-dir $(TOOL_PERMISSION_GENERATED)
+
+tool-permission-demo:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m agent_security.tool_permissions demo --config-dir $(TOOL_PERMISSION_CONFIG) --scenarios-dir $(TOOL_PERMISSION_SCENARIOS)
+
 lesson-02: threat-model-validate threat-model-check test
 
 lesson-03: context-lab-inspect context-lab-check test
@@ -128,6 +147,8 @@ lesson-05: prompt-firewall-validate prompt-firewall-check prompt-firewall-evalua
 lesson-06: guardrails-validate guardrails-check guardrails-evaluate test
 
 lesson-07: tool-risk-validate tool-risk-check tool-risk-evaluate test
+
+lesson-08: tool-permission-validate tool-permission-check tool-permission-evaluate test
 
 test:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -v

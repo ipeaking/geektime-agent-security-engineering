@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-11"
+title = "Administrator 在用户管理任务中调用 manage_users"
+subject_id = "SUBJECT-ADMIN"
+task_id = "TASK-USER-ADMIN"
+
+[tool_call]
+name = "manage_users"
+arguments = { user_id = "USER-001", action = "suspend" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-04"
+title = "Editor 在编辑任务中调用 write_file"
+subject_id = "SUBJECT-EDITOR"
+task_id = "TASK-EDIT-DOCUMENT"
+
+[tool_call]
+name = "write_file"
+arguments = { path = "guide.txt", content = "changed" }
+
+[expected]
+outcome = "ALLOW"
+reason = "all_required_checks_satisfied"
+delegated = true

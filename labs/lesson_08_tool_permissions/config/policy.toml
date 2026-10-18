@@ -1,0 +1,9 @@
+schema_version = "1.0"
+version = "lesson-08-v1"
+check_order = [
+  "request_valid",
+  "tool_registered",
+  "subject_role_allowed",
+  "tool_allowed_by_task",
+  "capabilities_allowed_by_task",
+]

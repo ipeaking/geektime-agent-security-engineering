@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-08"
+title = "Reader 在读取任务中提出 run_shell"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-READ-DOCUMENT"
+
+[tool_call]
+name = "run_shell"
+arguments = { command = "package-inventory" }
+
+[expected]
+outcome = "DENY"
+reason = "tool_not_allowed_by_task"
+delegated = false

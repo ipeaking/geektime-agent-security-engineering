@@ -1,0 +1,14 @@
+schema_version = "1.0"
+id = "TP-SCENARIO-03"
+title = "Reader 不能承担编辑任务"
+subject_id = "SUBJECT-READER"
+task_id = "TASK-EDIT-DOCUMENT"
+
+[tool_call]
+name = "write_file"
+arguments = { path = "guide.txt", content = "changed" }
+
+[expected]
+outcome = "DENY"
+reason = "subject_role_not_allowed"
+delegated = false

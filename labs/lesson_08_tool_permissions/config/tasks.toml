@@ -1,0 +1,50 @@
+schema_version = "1.0"
+
+[[tasks]]
+id = "TASK-READ-DOCUMENT"
+display_name = "读取文档"
+allowed_roles = ["reader", "editor"]
+allowed_tools = ["read_file"]
+allowed_capabilities = ["READ"]
+
+[[tasks]]
+id = "TASK-EDIT-DOCUMENT"
+display_name = "编辑文档"
+allowed_roles = ["editor"]
+allowed_tools = ["read_file", "write_file"]
+allowed_capabilities = ["READ", "WRITE"]
+
+[[tasks]]
+id = "TASK-SEND-UPDATE"
+display_name = "发送业务通知"
+allowed_roles = ["communicator"]
+allowed_tools = ["send_email"]
+allowed_capabilities = ["WRITE", "NETWORK"]
+
+[[tasks]]
+id = "TASK-MAINTENANCE"
+display_name = "执行维护命令"
+allowed_roles = ["operator"]
+allowed_tools = ["run_shell"]
+allowed_capabilities = ["EXECUTE"]
+
+[[tasks]]
+id = "TASK-BILLING"
+display_name = "处理付款"
+allowed_roles = ["billing_operator"]
+allowed_tools = ["charge_payment"]
+allowed_capabilities = ["PAYMENT", "NETWORK"]
+
+[[tasks]]
+id = "TASK-USER-ADMIN"
+display_name = "管理用户"
+allowed_roles = ["administrator"]
+allowed_tools = ["manage_users"]
+allowed_capabilities = ["ADMIN", "WRITE"]
+
+[[tasks]]
+id = "TASK-DATA-QUERY"
+display_name = "查询业务数据"
+allowed_roles = ["reader"]
+allowed_tools = ["query_db"]
+allowed_capabilities = ["READ"]
