@@ -1,6 +1,7 @@
 schema_version = "1.0"
 id = "TR-SCENARIO-04"
 title = "写入合成启动配置"
+risk_dimension = "状态修改与完整性"
 fixture = "fixtures/04-file-write.txt"
 final_text = "初始化配置已写入。"
 

@@ -39,6 +39,7 @@ class ToolRiskExpectation:
 class ToolRiskScenario:
     id: str
     title: str
+    risk_dimension: str
     fixture_ref: str
     fixture_sha256: str
     final_text: str
