@@ -38,18 +38,19 @@ def _matrix(report: ToolRiskReport) -> str:
     lines = [
         "# Tool Risk Matrix",
         "",
-        "| Scenario | Proposed | Executed | Effects | Canary at Sink | 验收 |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Scenario | Proposed | Executed | Observable Effects | Canary at Sink | 主要风险维度 | 验收 |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for item in report.runs:
         lines.append(
-            "| %s | %s | %s | %s | %s | %s |"
+            "| %s | %s | %s | %s | %s | %s | %s |"
             % (
                 item.scenario.id,
                 ", ".join(item.proposed_tools) or "-",
                 ", ".join(item.executed_tools) or "-",
                 ", ".join(event.effect.value for event in item.events) or "-",
                 "yes" if item.canary_reached_sink else "no",
+                item.scenario.risk_dimension,
                 "PASS" if item.passed else "FAIL",
             )
         )
@@ -101,6 +102,7 @@ def _json(report: ToolRiskReport) -> str:
                 "executed_tools": list(item.executed_tools),
                 "effects": [event.effect.value for event in item.events],
                 "canary_reached_sink": item.canary_reached_sink,
+                "risk_dimension": item.scenario.risk_dimension,
                 "fixture_sha256_retained": True,
                 "passed": item.passed,
                 "mismatches": list(item.mismatches),

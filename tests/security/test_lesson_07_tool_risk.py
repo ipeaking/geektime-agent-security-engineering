@@ -61,6 +61,19 @@ class ToolRiskConfigTest(ToolRiskFixture):
         used = {step.tool_name for item in self.scenarios for step in item.steps}
         self.assertEqual(used, {item.name for item in self.tools})
 
+    def test_every_scenario_declares_a_risk_dimension(self) -> None:
+        self.assertEqual(
+            {item.risk_dimension for item in self.scenarios},
+            {
+                "错误信息",
+                "数据访问",
+                "机密性与外发",
+                "状态修改与完整性",
+                "批量数据访问与外发",
+                "执行面扩大",
+            },
+        )
+
     def test_loader_rejects_unknown_tool_field(self) -> None:
         with self.copy_lesson() as root:
             path = root / "config" / "tools.toml"
@@ -158,6 +171,23 @@ class ToolRiskRuntimeTest(ToolRiskFixture):
             run_scenario(scenario, self.tools),
             run_scenario(scenario, self.tools),
         )
+
+    def test_each_scenario_environment_is_isolated(self) -> None:
+        first = SyntheticToolEnvironment(self.tools)
+        first.execute(
+            "CALL-WRITE",
+            "write_file",
+            {"path": "scenario-only.txt", "content": "value"},
+        )
+        first.execute(
+            "CALL-MAIL",
+            "send_email",
+            {"to": "sink@example.invalid", "subject": "fixture", "body": "value"},
+        )
+        second = SyntheticToolEnvironment(self.tools)
+        self.assertNotIn("scenario-only.txt", second.files)
+        self.assertEqual(second.outbox, [])
+        self.assertEqual(second.shell_log, [])
 
 
 class ToolRiskReportAndCliTest(ToolRiskFixture):

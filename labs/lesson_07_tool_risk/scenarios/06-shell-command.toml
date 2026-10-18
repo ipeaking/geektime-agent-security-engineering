@@ -1,6 +1,7 @@
 schema_version = "1.0"
 id = "TR-SCENARIO-06"
 title = "运行合成 Shell 命令"
+risk_dimension = "执行面扩大"
 fixture = "fixtures/06-shell-command.txt"
 final_text = "系统信息采集完成。"
 

@@ -78,6 +78,7 @@ def _load_scenario(
             "schema_version",
             "id",
             "title",
+            "risk_dimension",
             "fixture",
             "final_text",
             "steps",
@@ -127,6 +128,7 @@ def _load_scenario(
     return ToolRiskScenario(
         id=_text(payload, "id", path.name),
         title=_text(payload, "title", path.name),
+        risk_dimension=_text(payload, "risk_dimension", path.name),
         fixture_ref=fixture_ref,
         fixture_sha256=hashlib.sha256(fixture_bytes).hexdigest(),
         final_text=_text(payload, "final_text", path.name),
