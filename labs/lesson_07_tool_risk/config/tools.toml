@@ -1,0 +1,26 @@
+schema_version = "1.0"
+
+[[tools]]
+name = "read_file"
+effect = "FILE_READ"
+description = "从合成内存文件系统读取内容"
+
+[[tools]]
+name = "write_file"
+effect = "FILE_WRITE"
+description = "向合成内存文件系统写入内容"
+
+[[tools]]
+name = "send_email"
+effect = "EMAIL_SENT"
+description = "把邮件写入本地内存 Outbox"
+
+[[tools]]
+name = "query_db"
+effect = "DB_QUERY"
+description = "执行预定义的合成数据库查询"
+
+[[tools]]
+name = "run_shell"
+effect = "SHELL_COMMAND"
+description = "把白名单命令记录到内存 Shell Recorder"

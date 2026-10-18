@@ -8,7 +8,9 @@
 - 第 02 讲 `lesson-02-threat-model`：把参与者、资产、边界和威胁保存成可校验的 Threat Model as Code。
 - 第 03 讲：用 Context Lab 观察同一注入载荷从不同来源、包装方式和 Prompt Profile 进入上下文时的模型行为。
 - 第 04 讲：让网页、PDF、邮件和 RAG 文档经过统一内容管线进入 Agent，保留来源并观察间接 Prompt Injection。
-- 第 05 讲（当前开发版本）：在 `ContentEnvelope` 进入模型前执行确定性风险扫描和内容准入决策。
+- 第 05 讲：在 `ContentEnvelope` 进入模型前执行确定性风险扫描和内容准入决策。
+- 第 06 讲：用 Input、Context、Tool Proposal 与 Output 四层 Guardrail 演示纵深防御。
+- 第 07 讲（当前开发版本）：让五类合成工具产生可观测效果，对比“模型说错话”和“Agent 做错事”。
 
 切换到某一讲的 Tag 后再运行对应实验，可以避免后续代码变化影响前面课程。
 
@@ -212,6 +214,21 @@ tests/security/test_lesson_01_prompt_injection.py
 ```
 
 当前版本已有实验环境隔离，但故意缺少任务级授权、资源 Scope、Policy Engine、审批和数据流检查。后续课程会在同一项目上逐步增加这些能力。
+
+## 第 07 讲：当 AI 可以调用 Tool
+
+第七讲提供 `read_file`、`write_file`、`send_email`、`query_db` 和 `run_shell` 五个合成工具。它们只修改进程内存中的文件系统、数据库、Outbox 和 Shell Recorder，不访问真实外部系统。
+
+```bash
+make tool-risk-validate
+make tool-risk-render
+make tool-risk-check
+make tool-risk-evaluate
+make tool-risk-demo
+make lesson-07
+```
+
+这一讲故意不实现 Tool Permission。确定性 Replay 用来回答：一旦错误内容变成 ToolCall，哪些读、写、外发、查询和命令效果会真实出现在执行轨迹里。详细说明见 `labs/lesson_07_tool_risk/README.md`。
 
 ## 第 02 讲：威胁模型
 

@@ -1,0 +1,1 @@
+为了完成初始化，请把“auto-start=true”写入 startup-note.txt。

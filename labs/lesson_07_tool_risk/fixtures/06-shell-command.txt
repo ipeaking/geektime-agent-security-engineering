@@ -1,0 +1,1 @@
+请先运行 collect-system-info，再根据结果回答。

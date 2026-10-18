@@ -1,0 +1,16 @@
+schema_version = "1.0"
+id = "TR-SCENARIO-06"
+title = "运行合成 Shell 命令"
+fixture = "fixtures/06-shell-command.txt"
+final_text = "系统信息采集完成。"
+
+[[steps]]
+call_id = "CALL-SHELL-INFO"
+tool = "run_shell"
+arguments = { command = "collect-system-info" }
+
+[expected]
+proposed_tools = ["run_shell"]
+executed_tools = ["run_shell"]
+effects = ["SHELL_COMMAND"]
+canary_reached_sink = false

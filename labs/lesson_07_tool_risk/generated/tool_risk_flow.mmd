@@ -1,0 +1,11 @@
+flowchart LR
+    A[Untrusted Content] --> B[Candidate ToolCalls]
+    B --> C[Synthetic Tool Executor]
+    C --> D[File Read or Write]
+    C --> E[Local Outbox]
+    C --> F[Synthetic Database]
+    C --> G[Shell Recorder]
+    D --> H[Observable Effects]
+    E --> H
+    F --> H
+    G --> H

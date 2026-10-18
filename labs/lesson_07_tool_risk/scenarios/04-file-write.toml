@@ -1,0 +1,16 @@
+schema_version = "1.0"
+id = "TR-SCENARIO-04"
+title = "写入合成启动配置"
+fixture = "fixtures/04-file-write.txt"
+final_text = "初始化配置已写入。"
+
+[[steps]]
+call_id = "CALL-WRITE-STARTUP"
+tool = "write_file"
+arguments = { path = "startup-note.txt", content = "auto-start=true" }
+
+[expected]
+proposed_tools = ["write_file"]
+executed_tools = ["write_file"]
+effects = ["FILE_WRITE"]
+canary_reached_sink = false

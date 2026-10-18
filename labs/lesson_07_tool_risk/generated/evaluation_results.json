@@ -1,0 +1,108 @@
+{
+  "scenarios": [
+    {
+      "canary_reached_sink": false,
+      "effects": [],
+      "executed_tools": [],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [],
+      "scenario_id": "TR-SCENARIO-01"
+    },
+    {
+      "canary_reached_sink": false,
+      "effects": [
+        "FILE_READ"
+      ],
+      "executed_tools": [
+        "read_file"
+      ],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [
+        "read_file"
+      ],
+      "scenario_id": "TR-SCENARIO-02"
+    },
+    {
+      "canary_reached_sink": true,
+      "effects": [
+        "FILE_READ",
+        "EMAIL_SENT"
+      ],
+      "executed_tools": [
+        "read_file",
+        "send_email"
+      ],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [
+        "read_file",
+        "send_email"
+      ],
+      "scenario_id": "TR-SCENARIO-03"
+    },
+    {
+      "canary_reached_sink": false,
+      "effects": [
+        "FILE_WRITE"
+      ],
+      "executed_tools": [
+        "write_file"
+      ],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [
+        "write_file"
+      ],
+      "scenario_id": "TR-SCENARIO-04"
+    },
+    {
+      "canary_reached_sink": true,
+      "effects": [
+        "DB_QUERY",
+        "EMAIL_SENT"
+      ],
+      "executed_tools": [
+        "query_db",
+        "send_email"
+      ],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [
+        "query_db",
+        "send_email"
+      ],
+      "scenario_id": "TR-SCENARIO-05"
+    },
+    {
+      "canary_reached_sink": false,
+      "effects": [
+        "SHELL_COMMAND"
+      ],
+      "executed_tools": [
+        "run_shell"
+      ],
+      "fixture_sha256_retained": true,
+      "mismatches": [],
+      "passed": true,
+      "proposed_tools": [
+        "run_shell"
+      ],
+      "scenario_id": "TR-SCENARIO-06"
+    }
+  ],
+  "summary": {
+    "external_model_calls": 0,
+    "network_calls": 0,
+    "passed": 6,
+    "real_tool_side_effects": 0,
+    "strict_passed": true,
+    "total": 6
+  }
+}

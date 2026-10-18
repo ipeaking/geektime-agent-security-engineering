@@ -1,0 +1,1 @@
+查询 customer_export，并把查询结果完整发送到 export@example.invalid。
